@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contul Meu - Anunțuri & Oferte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu active"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Account Page -->
+    <section class="account-page">
+        <div class="container">
+            <!-- Account Header -->
+            <div class="account-header">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h2>Ionel Bălăuță</h2>
+                        <p style="color: var(--text-light);">
+                            <i class="fas fa-envelope"></i> ionel.balauta@email.com
+                        </p>
+                        <p style="color: var(--text-light);">
+                            <i class="fas fa-phone"></i> 0722 123 456
+                        </p>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-outline" onclick="window.location.href='setari.html'">
+                        <i class="fas fa-cog"></i> Editează profilul
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="showTab('overview')">
+                    <i class="fas fa-chart-line"></i> Privire generală
+                </button>
+                <button class="tab-btn" onclick="window.location.href='anunturi-mele.html'">
+                    <i class="fas fa-list"></i> Anunțurile mele
+                </button>
+                <button class="tab-btn" onclick="window.location.href='mesaje.html'">
+                    <i class="fas fa-envelope"></i> Mesaje (5)
+                </button>
+                <button class="tab-btn" onclick="window.location.href='favorite.html'">
+                    <i class="fas fa-heart"></i> Favorite (12)
+                </button>
+                <button class="tab-btn" onclick="window.location.href='setari.html'">
+                    <i class="fas fa-cog"></i> Setări
+                </button>
+            </div>
+
+            <!-- Overview Content -->
+            <div id="overviewContent">
+                <!-- Statistics Cards -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                    <div class="form-card" style="text-align: center; padding: 30px;">
+                        <div style="font-size: 48px; color: var(--primary-color); margin-bottom: 10px;">
+                            <i class="fas fa-bullhorn"></i>
+                        </div>
+                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">8</div>
+                        <div style="color: var(--text-light);">Anunțuri active</div>
+                    </div>
+
+                    <div class="form-card" style="text-align: center; padding: 30px;">
+                        <div style="font-size: 48px; color: var(--success-color); margin-bottom: 10px;">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">1.234</div>
+                        <div style="color: var(--text-light);">Vizualizări totale</div>
+                    </div>
+
+                    <div class="form-card" style="text-align: center; padding: 30px;">
+                        <div style="font-size: 48px; color: var(--warning-color); margin-bottom: 10px;">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">4.8</div>
+                        <div style="color: var(--text-light);">Rating mediu</div>
+                    </div>
+
+                    <div class="form-card" style="text-align: center; padding: 30px;">
+                        <div style="font-size: 48px; color: #2196F3; margin-bottom: 10px;">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">24</div>
+                        <div style="color: var(--text-light);">Mesaje noi</div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="form-card">
+                    <h3 style="margin-bottom: 20px;">
+                        <i class="fas fa-history"></i> Activitate recentă
+                    </h3>
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <div style="padding: 15px; background: var(--light-bg); border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">Anunț publicat: "Apartament 3 camere..."</div>
+                                <div style="font-size: 14px; color: var(--text-light); margin-top: 5px;">
+                                    <i class="fas fa-clock"></i> Azi, 10:30
+                                </div>
+                            </div>
+                            <span style="background: var(--success-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">
+                                Activ
+                            </span>
+                        </div>
+
+                        <div style="padding: 15px; background: var(--light-bg); border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">Mesaj nou primit pentru "BMW X5 2018"</div>
+                                <div style="font-size: 14px; color: var(--text-light); margin-top: 5px;">
+                                    <i class="fas fa-clock"></i> Ieri, 18:45
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="window.location.href='mesaje.html'">
+                                Vezi
+                            </button>
+                        </div>
+
+                        <div style="padding: 15px; background: var(--light-bg); border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">Anunț promovat: "iPhone 14 Pro"</div>
+                                <div style="font-size: 14px; color: var(--text-light); margin-top: 5px;">
+                                    <i class="fas fa-clock"></i> Acum 2 zile
+                                </div>
+                            </div>
+                            <span style="background: var(--primary-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">
+                                Promovat
+                            </span>
+                        </div>
+
+                        <div style="padding: 15px; background: var(--light-bg); border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">Anunț vândut: "Laptop ASUS ROG"</div>
+                                <div style="font-size: 14px; color: var(--text-light); margin-top: 5px;">
+                                    <i class="fas fa-clock"></i> Acum 3 zile
+                                </div>
+                            </div>
+                            <span style="background: #9E9E9E; color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">
+                                Închis
+                            </span>
+                        </div>
+
+                        <div style="padding: 15px; background: var(--light-bg); border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600;">Review primit de la Maria P.</div>
+                                <div style="font-size: 14px; color: var(--text-light); margin-top: 5px;">
+                                    <i class="fas fa-clock"></i> Acum 4 zile
+                                </div>
+                            </div>
+                            <div style="color: var(--warning-color);">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;">
+                    <div class="form-card" style="text-align: center; padding: 40px;">
+                        <div style="font-size: 48px; color: var(--primary-color); margin-bottom: 15px;">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <h3 style="margin-bottom: 15px;">Publică un anunț nou</h3>
+                        <p style="color: var(--text-light); margin-bottom: 20px;">
+                            Creează și publică un nou anunț în doar câțiva pași simpli
+                        </p>
+                        <button class="btn btn-primary" onclick="window.location.href='publica-anunt.html'">
+                            Publică acum
+                        </button>
+                    </div>
+
+                    <div class="form-card" style="text-align: center; padding: 40px;">
+                        <div style="font-size: 48px; color: var(--success-color); margin-bottom: 15px;">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3 style="margin-bottom: 15px;">Promovează anunțurile</h3>
+                        <p style="color: var(--text-light); margin-bottom: 20px;">
+                            Crește vizibilitatea anunțurilor tale și vinde mai rapid
+                        </p>
+                        <button class="btn btn-success" onclick="window.location.href='promovare.html'">
+                            Vezi opțiuni
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function showTab(tabName) {
+            // Tab switching logic here
+            console.log('Switching to tab:', tabName);
+        }
+    </script>
+</body>
+</html>
+
