@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesaje - Anunțuri & Oferte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .messages-container {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 20px;
+            height: calc(100vh - 300px);
+        }
+        .conversations-list {
+            background: white;
+            border-radius: 10px;
+            overflow-y: auto;
+        }
+        .conversation-item {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .conversation-item:hover,
+        .conversation-item.active {
+            background: var(--light-bg);
+        }
+        .chat-window {
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        .message.sent {
+            justify-content: flex-end;
+        }
+        .message-bubble {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 15px;
+            background: var(--light-bg);
+        }
+        .message.sent .message-bubble {
+            background: var(--primary-color);
+            color: white;
+        }
+        .chat-input {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 10px;
+        }
+        @media (max-width: 968px) {
+            .messages-container {
+                grid-template-columns: 1fr;
+            }
+            .conversations-list {
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu active"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="account-page">
+        <div class="container">
+            <h1 style="margin-bottom: 30px;"><i class="fas fa-envelope"></i> Mesaje</h1>
+
+            <div class="messages-container">
+                <div class="conversations-list">
+                    <div class="conversation-item active">
+                        <div style="display: flex; gap: 10px;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                MP
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <strong>Maria Popescu</strong>
+                                    <span style="font-size: 12px; color: var(--text-light);">10:30</span>
+                                </div>
+                                <div style="font-size: 14px; color: var(--text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    Apartamentul este încă disponibil?
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="conversation-item">
+                        <div style="display: flex; gap: 10px;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--success-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                AI
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                                    <strong>Andrei Ion</strong>
+                                    <span style="font-size: 12px; color: var(--text-light);">Ieri</span>
+                                </div>
+                                <div style="font-size: 14px; color: var(--text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    Mulțumesc pentru informații!
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-window">
+                    <div class="chat-header">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                MP
+                            </div>
+                            <div>
+                                <h3 style="margin-bottom: 5px;">Maria Popescu</h3>
+                                <div style="font-size: 14px; color: var(--text-light);">
+                                    Despre: Apartament 3 camere, Bloc nou
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-messages">
+                        <div class="message">
+                            <div class="message-bubble">
+                                <div>Bună ziua! Apartamentul este încă disponibil?</div>
+                                <div style="font-size: 11px; opacity: 0.7; margin-top: 5px;">10:25</div>
+                            </div>
+                        </div>
+
+                        <div class="message sent">
+                            <div class="message-bubble">
+                                <div>Bună ziua! Da, apartamentul este disponibil. Vă pot ajuta cu mai multe informații?</div>
+                                <div style="font-size: 11px; opacity: 0.9; margin-top: 5px;">10:27</div>
+                            </div>
+                        </div>
+
+                        <div class="message">
+                            <div class="message-bubble">
+                                <div>Aș dori să programez o vizionare. Când ar fi posibil?</div>
+                                <div style="font-size: 11px; opacity: 0.7; margin-top: 5px;">10:30</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input">
+                        <input type="text" class="form-control" placeholder="Scrie un mesaj..." style="flex: 1;">
+                        <button class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i> Trimite
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
