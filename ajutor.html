@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ajutor - Anunțuri & Oferte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .faq-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .faq-item:hover {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .faq-answer {
+            margin-top: 15px;
+            display: none;
+            line-height: 1.8;
+            color: var(--text-light);
+        }
+        .faq-item.active .faq-answer {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="account-page">
+        <div class="container" style="max-width: 900px;">
+            <h1 style="margin-bottom: 30px; text-align: center;"><i class="fas fa-question-circle"></i> Centru de ajutor</h1>
+
+            <div class="form-card" style="margin-bottom: 30px;">
+                <input type="text" class="form-control" placeholder="Caută în întrebări frecvente..." style="font-size: 18px;">
+            </div>
+
+            <h2 style="margin-bottom: 20px;">Întrebări frecvente (FAQ)</h2>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <span>Cum public un anunț?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Pentru a publica un anunț, urmează acești pași:
+                    <ol>
+                        <li>Conectează-te la cont sau creează un cont nou</li>
+                        <li>Click pe butonul "Publică Anunț" din meniul principal</li>
+                        <li>Completează toate câmpurile obligatorii (titlu, categorie, preț, descriere)</li>
+                        <li>Adaugă fotografii de calitate (recomandat 5-10 imagini)</li>
+                        <li>Verifică informațiile și click pe "Publică anunțul"</li>
+                    </ol>
+                    Anunțul tău va fi publicat imediat și va apărea în căutări.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <span>Cât timp rămâne activ un anunț?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Anunțurile gratuite rămân active timp de 30 de zile. După această perioadă, poți reactualiza anunțul gratuit pentru încă 30 de zile. Anunțurile promovate au perioade de valabilitate diferite în funcție de pachetul ales.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <span>Cum pot contacta un vânzător?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Pentru a contacta un vânzător:
+                    <ul>
+                        <li>Accesează pagina anunțului dorit</li>
+                        <li>Click pe "Afișează telefonul" pentru a vedea numărul de telefon</li>
+                        <li>Sau click pe "Trimite mesaj" pentru a-l contacta prin platforma noastră</li>
+                        <li>Poți pune întrebări direct în sistem de mesagerie</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <span>Este gratuit să public anunțuri?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Da! Publicarea anunțurilor pe platforma noastră este complet gratuită. Totuși, oferim și opțiuni de promovare plătite care îți cresc vizibilitatea anunțului și șansele de vânzare rapidă.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <span>Cum pot promova un anunț?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Pentru a promova un anunț:
+                    <ol>
+                        <li>Mergi la "Anunțurile mele"</li>
+                        <li>Selectează anunțul pe care vrei să-l promovezi</li>
+                        <li>Click pe "Promovează"</li>
+                        <li>Alege pachetul de promovare dorit</li>
+                        <li>Efectuează plata</li>
+                    </ol>
+                    Anunțul promovat va apărea în poziții prioritare în căutări.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <span>Cum mă protejez de fraude?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Sfaturi de siguranță:
+                    <ul>
+                        <li>Nu plăti niciodată în avans fără să vezi produsul</li>
+                        <li>Întâlnește-te cu vânzătorul într-un loc public</li>
+                        <li>Verifică produsul înainte de plată</li>
+                        <li>Evită ofertele care par prea bune ca să fie adevărate</li>
+                        <li>Nu furniza date personale sensibile (CNP, parole bancare)</li>
+                        <li>Raportează anunțurile suspecte</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <span>Cum editez sau șterg un anunț?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Pentru a edita sau șterge un anunț:
+                    <ol>
+                        <li>Mergi la "Anunțurile mele"</li>
+                        <li>Găsește anunțul pe care vrei să-l modifici</li>
+                        <li>Click pe "Editează" pentru a modifica datele</li>
+                        <li>Sau click pe "Șterge" pentru a elimina anunțul</li>
+                    </ol>
+                    Modificările sunt aplicate imediat.
+                </div>
+            </div>
+
+            <div class="faq-item" onclick="this.classList.toggle('active')">
+                <div class="faq-question">
+                    <span>Cum pot recupera parola uitată?</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    Pentru a recupera parola:
+                    <ol>
+                        <li>Click pe "Autentificare" în meniul principal</li>
+                        <li>Click pe "Ai uitat parola?"</li>
+                        <li>Introdu emailul contului tău</li>
+                        <li>Vei primi un email cu un link de resetare</li>
+                        <li>Accesează linkul și setează o parolă nouă</li>
+                    </ol>
+                </div>
+            </div>
+
+            <div style="margin-top: 40px; background: #e3f2fd; padding: 30px; border-radius: 10px; text-align: center;">
+                <h3 style="margin-bottom: 15px;">Nu ai găsit răspunsul?</h3>
+                <p style="margin-bottom: 20px; color: var(--text-light);">
+                    Echipa noastră de suport este aici să te ajute!
+                </p>
+                <button class="btn btn-primary" onclick="window.location.href='contact.html'">
+                    <i class="fas fa-envelope"></i> Contactează suportul
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
