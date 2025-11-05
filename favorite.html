@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favorite - Anunțuri & Oferte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html" class="active"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="account-page">
+        <div class="container">
+            <h1 style="margin-bottom: 30px;">
+                <i class="fas fa-heart" style="color: var(--danger-color);"></i> Anunțuri favorite (12)
+            </h1>
+
+            <div class="ads-grid">
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=1'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=Apartament" alt="Apartament">
+                        <button class="favorite-btn active" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">120.000 €</div>
+                        <h3 class="ad-title">Apartament 3 camere, Bloc nou, Parcare</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> București, Sector 2</div>
+                        <div class="ad-date">Publicat azi</div>
+                    </div>
+                </div>
+
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=2'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=BMW+X5" alt="BMW">
+                        <button class="favorite-btn active" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">28.500 €</div>
+                        <h3 class="ad-title">BMW X5, 2018, Full Options</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Cluj-Napoca</div>
+                        <div class="ad-date">Acum 2 zile</div>
+                    </div>
+                </div>
+
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=3'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=iPhone" alt="iPhone">
+                        <button class="favorite-btn active" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="fas fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">950 €</div>
+                        <h3 class="ad-title">iPhone 14 Pro, 256GB, Sigilat</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Timișoara</div>
+                        <div class="ad-date">Acum 3 ore</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
