@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anunțurile Mele - Anunțuri & Oferte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu active"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="account-page">
+        <div class="container">
+            <h1 style="margin-bottom: 30px;"><i class="fas fa-list"></i> Anunțurile mele</h1>
+            
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterAds('active')">
+                    Active (5)
+                </button>
+                <button class="tab-btn" onclick="filterAds('pending')">
+                    În așteptare (2)
+                </button>
+                <button class="tab-btn" onclick="filterAds('sold')">
+                    Vândute (8)
+                </button>
+                <button class="tab-btn" onclick="filterAds('expired')">
+                    Expirate (3)
+                </button>
+            </div>
+
+            <div class="form-card">
+                <div style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- Ad Item 1 -->
+                    <div style="display: flex; gap: 20px; padding: 20px; border: 1px solid var(--border-color); border-radius: 10px;">
+                        <img src="https://via.placeholder.com/150x120?text=Apartament" alt="Anunț" style="width: 150px; height: 120px; object-fit: cover; border-radius: 8px;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                <div>
+                                    <h3 style="margin-bottom: 5px;">Apartament 3 camere, Bloc nou</h3>
+                                    <div style="font-size: 24px; color: var(--primary-color); font-weight: bold;">120.000 €</div>
+                                </div>
+                                <span style="background: var(--success-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">
+                                    Activ
+                                </span>
+                            </div>
+                            <div style="color: var(--text-light); margin-bottom: 10px;">
+                                <i class="fas fa-map-marker-alt"></i> București, Sector 2 •
+                                <i class="fas fa-eye"></i> 245 vizualizări •
+                                <i class="fas fa-clock"></i> Publicat azi
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">
+                                    <i class="fas fa-edit"></i> Editează
+                                </button>
+                                <button class="btn btn-success" style="padding: 8px 16px; font-size: 14px;">
+                                    <i class="fas fa-rocket"></i> Promovează
+                                </button>
+                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">
+                                    <i class="fas fa-chart-line"></i> Statistici
+                                </button>
+                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px; color: var(--danger-color);">
+                                    <i class="fas fa-trash"></i> Șterge
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ad Item 2 -->
+                    <div style="display: flex; gap: 20px; padding: 20px; border: 1px solid var(--border-color); border-radius: 10px;">
+                        <img src="https://via.placeholder.com/150x120?text=BMW" alt="Anunț" style="width: 150px; height: 120px; object-fit: cover; border-radius: 8px;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                <div>
+                                    <h3 style="margin-bottom: 5px;">BMW X5, 2018, Full Options</h3>
+                                    <div style="font-size: 24px; color: var(--primary-color); font-weight: bold;">28.500 €</div>
+                                </div>
+                                <span style="background: var(--success-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">
+                                    Activ
+                                </span>
+                            </div>
+                            <div style="color: var(--text-light); margin-bottom: 10px;">
+                                <i class="fas fa-map-marker-alt"></i> Cluj-Napoca •
+                                <i class="fas fa-eye"></i> 189 vizualizări •
+                                <i class="fas fa-clock"></i> Acum 2 zile
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">
+                                    <i class="fas fa-edit"></i> Editează
+                                </button>
+                                <button class="btn btn-success" style="padding: 8px 16px; font-size: 14px;">
+                                    <i class="fas fa-rocket"></i> Promovează
+                                </button>
+                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">
+                                    <i class="fas fa-chart-line"></i> Statistici
+                                </button>
+                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px; color: var(--danger-color);">
+                                    <i class="fas fa-trash"></i> Șterge
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-primary btn-large" onclick="window.location.href='publica-anunt.html'">
+                    <i class="fas fa-plus"></i> Adaugă anunț nou
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function filterAds(status) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            console.log('Filtering ads by status:', status);
+        }
+    </script>
+</body>
+</html>
+
