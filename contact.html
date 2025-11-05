@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Anunțuri & Oferte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="account-page">
+        <div class="container" style="max-width: 900px;">
+            <h1 style="margin-bottom: 30px; text-align: center;"><i class="fas fa-envelope"></i> Contactează-ne</h1>
+
+            <div class="form-card">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-bottom: 40px;">
+                    <div style="text-align: center; padding: 30px;">
+                        <i class="fas fa-map-marker-alt" style="font-size: 48px; color: var(--primary-color); margin-bottom: 15px;"></i>
+                        <h3>Adresa</h3>
+                        <p style="color: var(--text-light);">
+                            Str. Exemplu nr. 123<br>
+                            București, Sector 1<br>
+                            România
+                        </p>
+                    </div>
+
+                    <div style="text-align: center; padding: 30px;">
+                        <i class="fas fa-phone" style="font-size: 48px; color: var(--primary-color); margin-bottom: 15px;"></i>
+                        <h3>Telefon</h3>
+                        <p style="color: var(--text-light);">
+                            +40 722 123 456<br>
+                            Luni - Vineri: 9:00 - 18:00<br>
+                            Sâmbătă: 10:00 - 14:00
+                        </p>
+                    </div>
+
+                    <div style="text-align: center; padding: 30px;">
+                        <i class="fas fa-envelope" style="font-size: 48px; color: var(--primary-color); margin-bottom: 15px;"></i>
+                        <h3>Email</h3>
+                        <p style="color: var(--text-light);">
+                            contact@anunturi-oferte.ro<br>
+                            suport@anunturi-oferte.ro<br>
+                            Răspundem în 24h
+                        </p>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 20px;">Trimite-ne un mesaj</h3>
+                <form onsubmit="return sendContactForm(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nume complet *</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Email *</label>
+                            <input type="email" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Subiect *</label>
+                        <input type="text" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Mesaj *</label>
+                        <textarea class="form-control" rows="6" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-paper-plane"></i> Trimite mesajul
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function sendContactForm(e) {
+            e.preventDefault();
+            showNotification('Mesajul tău a fost trimis cu succes! Îți vom răspunde în curând.', 'success');
+            e.target.reset();
+            return false;
+        }
+    </script>
+</body>
+</html>
+
