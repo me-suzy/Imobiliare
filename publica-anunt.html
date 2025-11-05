@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publică Anunț - Anunțuri & Oferte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .publish-page {
+            padding: 40px 20px;
+            background-color: var(--light-bg);
+            min-height: calc(100vh - 200px);
+        }
+
+        .publish-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .page-header p {
+            color: var(--text-light);
+            font-size: 18px;
+        }
+
+        .form-card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+        }
+
+        .form-section-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .image-upload {
+            border: 2px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 40px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .image-upload:hover {
+            border-color: var(--primary-color);
+            background-color: var(--light-bg);
+        }
+
+        .image-upload i {
+            font-size: 48px;
+            color: var(--text-light);
+            margin-bottom: 15px;
+        }
+
+        .image-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .image-preview-item {
+            position: relative;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .remove-image-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .price-input-group {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .price-input-group .form-control {
+            flex: 1;
+        }
+
+        .price-input-group select {
+            width: 120px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        .character-counter {
+            text-align: right;
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 5px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .info-box i {
+            color: #2196F3;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html" class="active"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Publish Page -->
+    <section class="publish-page">
+        <div class="publish-container">
+            <div class="page-header">
+                <h1>Publică un anunț nou</h1>
+                <p>Completează formularul de mai jos pentru a publica anunțul tău</p>
+            </div>
+
+            <div class="info-box">
+                <i class="fas fa-info-circle"></i>
+                <strong>Sfat:</strong> Cu cât adaugi mai multe detalii și fotografii de calitate, cu atât șansele de vânzare sunt mai mari!
+            </div>
+
+            <form id="publishForm" onsubmit="return publishAd(event)">
+                <!-- Basic Info -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h3 class="form-section-title"><i class="fas fa-info-circle"></i> Informații de bază</h3>
+                        
+                        <div class="form-group">
+                            <label>Titlu anunț *</label>
+                            <input type="text" class="form-control" id="title" placeholder="Ex: Apartament 3 camere, zonă centrală" required maxlength="100">
+                            <div class="character-counter">
+                                <span id="titleCounter">0</span>/100 caractere
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Categorie *</label>
+                                <select class="form-control" id="category" required>
+                                    <option value="">Selectează categoria</option>
+                                    <option value="imobiliare">Imobiliare</option>
+                                    <option value="auto-moto">Auto & Moto</option>
+                                    <option value="mobilier-casa">Mobilier & Casă</option>
+                                    <option value="joburi">Joburi</option>
+                                    <option value="electronice">Electronice</option>
+                                    <option value="animale">Animale</option>
+                                    <option value="fashion">Modă</option>
+                                    <option value="sport">Sport & Fitness</option>
+                                    <option value="altele">Altele</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Subcategorie</label>
+                                <select class="form-control" id="subcategory">
+                                    <option value="">Selectează subcategoria</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Stare *</label>
+                            <div style="display: flex; gap: 20px;">
+                                <label class="checkbox-group">
+                                    <input type="radio" name="condition" value="nou" required> Nou
+                                </label>
+                                <label class="checkbox-group">
+                                    <input type="radio" name="condition" value="folosit"> Folosit
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Price -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h3 class="form-section-title"><i class="fas fa-tag"></i> Preț</h3>
+                        
+                        <div class="price-input-group">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Preț *</label>
+                                <input type="number" class="form-control" id="price" placeholder="0" required min="0" step="0.01">
+                            </div>
+                            <div class="form-group">
+                                <label>Monedă *</label>
+                                <select class="form-control" id="currency" required>
+                                    <option value="RON">RON</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="USD">USD</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="negotiable">
+                            <label for="negotiable">Preț negociabil</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h3 class="form-section-title"><i class="fas fa-align-left"></i> Descriere</h3>
+                        
+                        <div class="form-group">
+                            <label>Descriere detaliată *</label>
+                            <textarea class="form-control" id="description" placeholder="Descrie produsul/serviciul tău în detaliu..." required maxlength="5000" rows="8"></textarea>
+                            <div class="character-counter">
+                                <span id="descCounter">0</span>/5000 caractere
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Images -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h3 class="form-section-title"><i class="fas fa-images"></i> Fotografii</h3>
+                        
+                        <div class="image-upload" onclick="document.getElementById('imageInput').click()">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <h4>Încarcă fotografii</h4>
+                            <p style="color: var(--text-light); margin-top: 10px;">
+                                Click pentru a adăuga până la 10 imagini<br>
+                                <small>Formatul acceptat: JPG, PNG (max 5MB per imagine)</small>
+                            </p>
+                            <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
+                        </div>
+
+                        <div class="image-preview-grid" id="imagePreview">
+                            <!-- Preview images will appear here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h3 class="form-section-title"><i class="fas fa-map-marker-alt"></i> Locație</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Județ *</label>
+                                <select class="form-control" id="county" required>
+                                    <option value="">Selectează județul</option>
+                                    <option value="bucuresti">București</option>
+                                    <option value="alba">Alba</option>
+                                    <option value="arad">Arad</option>
+                                    <option value="arges">Argeș</option>
+                                    <option value="bacau">Bacău</option>
+                                    <option value="bihor">Bihor</option>
+                                    <option value="bistrita-nasaud">Bistrița-Năsăud</option>
+                                    <option value="brasov">Brașov</option>
+                                    <option value="cluj">Cluj</option>
+                                    <option value="constanta">Constanța</option>
+                                    <option value="iasi">Iași</option>
+                                    <option value="timis">Timiș</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Oraș *</label>
+                                <input type="text" class="form-control" id="city" placeholder="Ex: București" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Adresă (opțional)</label>
+                            <input type="text" class="form-control" id="address" placeholder="Ex: Str. Principală nr. 10">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="form-card">
+                    <div class="form-section">
+                        <h3 class="form-section-title"><i class="fas fa-phone"></i> Date de contact</h3>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Nume *</label>
+                                <input type="text" class="form-control" id="contactName" placeholder="Nume complet" required>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Telefon *</label>
+                                <input type="tel" class="form-control" id="contactPhone" placeholder="07XX XXX XXX" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" class="form-control" id="contactEmail" placeholder="exemplu@email.com">
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="hidePhone">
+                            <label for="hidePhone">Ascunde numărul de telefon (va fi afișat doar după solicitare)</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms -->
+                <div class="form-card">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="acceptTerms" required>
+                        <label for="acceptTerms">
+                            Accept <a href="termeni.html" target="_blank">Termenii și Condițiile</a> și 
+                            <a href="politica-confidentialitate.html" target="_blank">Politica de confidențialitate</a> *
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="window.location.href='index.html'">
+                        <i class="fas fa-times"></i> Anulează
+                    </button>
+                    <button type="button" class="btn btn-outline">
+                        <i class="fas fa-eye"></i> Previzualizează
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-check"></i> Publică anunțul
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Character counters
+        document.getElementById('title').addEventListener('input', function() {
+            document.getElementById('titleCounter').textContent = this.value.length;
+        });
+
+        document.getElementById('description').addEventListener('input', function() {
+            document.getElementById('descCounter').textContent = this.value.length;
+        });
+
+        // Image upload preview
+        document.getElementById('imageInput').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const previewContainer = document.getElementById('imagePreview');
+            
+            for(let i = 0; i < files.length && i < 10; i++) {
+                const file = files[i];
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'image-preview-item';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <button type="button" class="remove-image-btn" onclick="this.parentElement.remove()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    previewContainer.appendChild(div);
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form submission
+        function publishAd(e) {
+            e.preventDefault();
+            
+            // Show success message
+            alert('Anunțul tău a fost publicat cu succes! \n\nVei fi redirecționat către pagina ta de anunțuri.');
+            
+            // Redirect to my ads page
+            window.location.href = 'anunturi-mele.html';
+            
+            return false;
+        }
+    </script>
+</body>
+</html>
+
