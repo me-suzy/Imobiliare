@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caută Anunțuri - Anunțuri & Oferte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html" class="active"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Search Page -->
+    <section class="search-section">
+        <div class="container">
+            <!-- Advanced Search -->
+            <div class="search-box">
+                <h2 style="margin-bottom: 20px;"><i class="fas fa-search"></i> Căutare avansată</h2>
+                
+                <div class="search-input-group" style="margin-bottom: 30px;">
+                    <input type="text" class="form-control" id="mainSearch" placeholder="Caută după cuvinte cheie...">
+                    <button class="btn btn-primary" onclick="performSearch()">
+                        <i class="fas fa-search"></i> Caută
+                    </button>
+                </div>
+
+                <div style="border-top: 1px solid var(--border-color); padding-top: 20px;">
+                    <h3 style="margin-bottom: 20px;">Filtrează rezultatele</h3>
+                    
+                    <div class="filters">
+                        <div class="form-group">
+                            <label>Categorie</label>
+                            <select class="form-control" id="filterCategory">
+                                <option value="">Toate categoriile</option>
+                                <option value="imobiliare">Imobiliare</option>
+                                <option value="auto-moto">Auto & Moto</option>
+                                <option value="mobilier-casa">Mobilier & Casă</option>
+                                <option value="joburi">Joburi</option>
+                                <option value="electronice">Electronice</option>
+                                <option value="animale">Animale</option>
+                                <option value="fashion">Modă</option>
+                                <option value="sport">Sport & Fitness</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Locație</label>
+                            <input type="text" class="form-control" id="location" placeholder="Oraș sau județ">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preț minim</label>
+                            <input type="number" class="form-control" id="priceMin" placeholder="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Preț maxim</label>
+                            <input type="number" class="form-control" id="priceMax" placeholder="Nelimitat">
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <h4 style="margin-bottom: 15px;">Stare produs</h4>
+                        <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+                            <label class="checkbox-group">
+                                <input type="checkbox" value="nou"> Nou
+                            </label>
+                            <label class="checkbox-group">
+                                <input type="checkbox" value="folosit"> Folosit
+                            </label>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 20px;">
+                        <h4 style="margin-bottom: 15px;">Sortare</h4>
+                        <select class="form-control" id="sortBy" style="max-width: 300px;">
+                            <option value="date-desc">Cele mai recente</option>
+                            <option value="date-asc">Cele mai vechi</option>
+                            <option value="price-asc">Preț crescător</option>
+                            <option value="price-desc">Preț descrescător</option>
+                            <option value="popular">Cele mai populare</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-top: 30px; display: flex; gap: 10px;">
+                        <button class="btn btn-primary" onclick="applyFilters()">
+                            <i class="fas fa-filter"></i> Aplică filtrele
+                        </button>
+                        <button class="btn btn-outline" onclick="resetFilters()">
+                            <i class="fas fa-redo"></i> Resetează
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Searches -->
+            <div class="form-card" style="margin-bottom: 30px;">
+                <h3 style="margin-bottom: 20px;">
+                    <i class="fas fa-fire"></i> Căutări populare
+                </h3>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                    <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="quickSearch('apartament bucuresti')">
+                        Apartament București
+                    </button>
+                    <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="quickSearch('volkswagen golf')">
+                        Volkswagen Golf
+                    </button>
+                    <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="quickSearch('iphone')">
+                        iPhone
+                    </button>
+                    <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="quickSearch('laptop gaming')">
+                        Laptop Gaming
+                    </button>
+                    <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="quickSearch('canapea')">
+                        Canapea
+                    </button>
+                    <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="quickSearch('bicicleta')">
+                        Bicicleta
+                    </button>
+                    <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="quickSearch('villa')">
+                        Vilă
+                    </button>
+                    <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="quickSearch('ps5')">
+                        PlayStation 5
+                    </button>
+                </div>
+            </div>
+
+            <!-- Recent Searches -->
+            <div class="form-card">
+                <h3 style="margin-bottom: 20px;">
+                    <i class="fas fa-history"></i> Căutări recente
+                </h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="padding: 15px; background: var(--light-bg); border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-search" style="color: var(--text-light);"></i>
+                            <span>Apartament 2 camere Cluj</span>
+                        </div>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;" onclick="quickSearch('Apartament 2 camere Cluj')">
+                            Caută din nou
+                        </button>
+                    </div>
+
+                    <div style="padding: 15px; background: var(--light-bg); border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-search" style="color: var(--text-light);"></i>
+                            <span>BMW X5 2018</span>
+                        </div>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;" onclick="quickSearch('BMW X5 2018')">
+                            Caută din nou
+                        </button>
+                    </div>
+
+                    <div style="padding: 15px; background: var(--light-bg); border-radius: 5px; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-search" style="color: var(--text-light);"></i>
+                            <span>iPhone 14 Pro</span>
+                        </div>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;" onclick="quickSearch('iPhone 14 Pro')">
+                            Caută din nou
+                        </button>
+                    </div>
+
+                    <button class="btn btn-outline" style="margin-top: 10px;" onclick="clearSearchHistory()">
+                        <i class="fas fa-trash"></i> Șterge istoricul
+                    </button>
+                </div>
+            </div>
+
+            <!-- Saved Searches -->
+            <div class="form-card" style="margin-top: 30px;">
+                <h3 style="margin-bottom: 20px;">
+                    <i class="fas fa-bell"></i> Căutări salvate
+                </h3>
+                <p style="color: var(--text-light); margin-bottom: 20px;">
+                    Salvează căutările tale și primește notificări când apar anunțuri noi care se potrivesc criteriilor tale.
+                </p>
+                
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div style="padding: 20px; background: var(--light-bg); border-radius: 5px; border-left: 4px solid var(--primary-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <div>
+                                <h4 style="margin-bottom: 5px;">Apartamente București Sector 1</h4>
+                                <p style="font-size: 14px; color: var(--text-light); margin-bottom: 10px;">
+                                    Preț: 80.000 - 150.000 EUR • Min 2 camere
+                                </p>
+                            </div>
+                            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span style="background: var(--success-color); color: white; padding: 4px 10px; border-radius: 15px; font-size: 12px;">
+                                <i class="fas fa-bell"></i> Notificări active
+                            </span>
+                            <span style="font-size: 14px; color: var(--text-light);">
+                                3 anunțuri noi în ultimele 7 zile
+                            </span>
+                        </div>
+                    </div>
+
+                    <div style="padding: 20px; background: var(--light-bg); border-radius: 5px; border-left: 4px solid var(--primary-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+                            <div>
+                                <h4 style="margin-bottom: 5px;">Mașini second-hand Cluj</h4>
+                                <p style="font-size: 14px; color: var(--text-light); margin-bottom: 10px;">
+                                    Preț: 5.000 - 20.000 EUR • An: 2015+
+                                </p>
+                            </div>
+                            <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <span style="background: var(--success-color); color: white; padding: 4px 10px; border-radius: 15px; font-size: 12px;">
+                                <i class="fas fa-bell"></i> Notificări active
+                            </span>
+                            <span style="font-size: 14px; color: var(--text-light);">
+                                8 anunțuri noi în ultimele 7 zile
+                            </span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" style="margin-top: 10px;">
+                        <i class="fas fa-plus"></i> Salvează căutarea curentă
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        function performSearch() {
+            const query = document.getElementById('mainSearch').value;
+            if (query) {
+                window.location.href = `anunturi.html?search=${encodeURIComponent(query)}`;
+            }
+        }
+
+        function quickSearch(query) {
+            document.getElementById('mainSearch').value = query;
+            performSearch();
+        }
+
+        function applyFilters() {
+            // Apply filters logic
+            alert('Filtrele au fost aplicate!');
+            window.location.href = 'anunturi.html';
+        }
+
+        function resetFilters() {
+            document.getElementById('mainSearch').value = '';
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('priceMin').value = '';
+            document.getElementById('priceMax').value = '';
+            document.getElementById('sortBy').value = 'date-desc';
+        }
+
+        function clearSearchHistory() {
+            if (confirm('Sigur vrei să ștergi tot istoricul de căutări?')) {
+                alert('Istoricul a fost șters!');
+                location.reload();
+            }
+        }
+
+        // Enter key search
+        document.getElementById('mainSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+</body>
+</html>
+
