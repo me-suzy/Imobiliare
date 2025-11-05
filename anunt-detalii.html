@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apartament 3 camere - Detalii anunț</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .ad-details-page {
+            padding: 40px 20px;
+            background-color: var(--light-bg);
+        }
+
+        .ad-details-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .ad-gallery {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .main-image {
+            width: 100%;
+            height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumbnail-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+        }
+
+        .thumbnail {
+            height: 80px;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: var(--primary-color);
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ad-info {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .ad-info-title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .ad-info-price {
+            font-size: 36px;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .ad-info-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+        }
+
+        .ad-description {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .ad-description h3 {
+            margin-bottom: 15px;
+        }
+
+        .ad-features {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: var(--light-bg);
+            border-radius: 5px;
+        }
+
+        .feature-item i {
+            color: var(--success-color);
+            font-size: 18px;
+        }
+
+        .seller-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 80px;
+        }
+
+        .seller-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .seller-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .seller-details h4 {
+            margin-bottom: 5px;
+        }
+
+        .seller-rating {
+            color: var(--warning-color);
+        }
+
+        .contact-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .phone-number {
+            background: var(--light-bg);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .safety-tips {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid var(--warning-color);
+            margin-top: 20px;
+        }
+
+        .safety-tips h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .safety-tips ul {
+            margin-left: 20px;
+            color: #856404;
+        }
+
+        @media (max-width: 968px) {
+            .ad-details-container {
+                grid-template-columns: 1fr;
+            }
+
+            .seller-card {
+                position: static;
+            }
+
+            .main-image {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Ad Details Page -->
+    <section class="ad-details-page">
+        <div class="container">
+            <div class="ad-details-container">
+                <!-- Left Column -->
+                <div>
+                    <!-- Gallery -->
+                    <div class="ad-gallery">
+                        <div class="main-image" id="mainImage">
+                            <img src="https://via.placeholder.com/800x500?text=Apartament+Principal" alt="Imagine principală">
+                        </div>
+                        <div class="thumbnail-gallery">
+                            <div class="thumbnail active">
+                                <img src="https://via.placeholder.com/100x80?text=1" alt="Imagine 1">
+                            </div>
+                            <div class="thumbnail">
+                                <img src="https://via.placeholder.com/100x80?text=2" alt="Imagine 2">
+                            </div>
+                            <div class="thumbnail">
+                                <img src="https://via.placeholder.com/100x80?text=3" alt="Imagine 3">
+                            </div>
+                            <div class="thumbnail">
+                                <img src="https://via.placeholder.com/100x80?text=4" alt="Imagine 4">
+                            </div>
+                            <div class="thumbnail">
+                                <img src="https://via.placeholder.com/100x80?text=5" alt="Imagine 5">
+                            </div>
+                            <div class="thumbnail">
+                                <img src="https://via.placeholder.com/100x80?text=6" alt="Imagine 6">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ad Info -->
+                    <div class="ad-info">
+                        <h1 class="ad-info-title">Apartament 3 camere, Bloc nou, Parcare inclusă</h1>
+                        <div class="ad-info-price">120.000 €</div>
+                        <div class="ad-info-meta">
+                            <div class="meta-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>București, Sector 2</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-clock"></i>
+                                <span>Publicat azi, 10:30</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-eye"></i>
+                                <span>245 vizualizări</span>
+                            </div>
+                            <div class="meta-item">
+                                <i class="fas fa-layer-group"></i>
+                                <span>ID: AO-12345</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn-outline" onclick="toggleFavorite(this)">
+                                <i class="far fa-heart"></i> Salvează
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-share-alt"></i> Distribuie
+                            </button>
+                            <button class="btn btn-outline">
+                                <i class="fas fa-flag"></i> Raportează
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="ad-description">
+                        <h3>Descriere</h3>
+                        <p>
+                            Vând apartament cu 3 camere în bloc nou, în zona de Nord a Bucureștiului, Sector 2. 
+                            Apartamentul are o suprafață utilă de 85 mp și este situat la etajul 4 dintr-un imobil modern cu 8 etaje.
+                        </p>
+                        <p>
+                            Proprietatea este complet finisată la cheie, cu materiale de calitate superioară. 
+                            Include gresie și faianță în băi și bucătărie, parchet laminat în camerele de locuit, 
+                            tâmplărie PVC cu geam termopan, uși de interior din lemn masiv.
+                        </p>
+                        <p>
+                            Bucătăria este complet echipată cu mobilier modern și aparatură electrocosnică: 
+                            frigider, aragaz cu cuptor, hotă, mașină de spălat vase.
+                        </p>
+                        <p>
+                            În preț este inclusă și o parcare subterană. Blocul dispune de lift, interfon video, 
+                            sistem de securitate și spații verzi amenajate. Zona este foarte bine dezvoltată, 
+                            cu acces rapid la transport în comun, școli, grădinițe, magazine și centre comerciale.
+                        </p>
+                    </div>
+
+                    <!-- Features -->
+                    <div class="ad-features">
+                        <h3 style="margin-bottom: 20px;">Caracteristici</h3>
+                        <div class="features-grid">
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Suprafață: 85 mp</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>3 camere</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>2 băi</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Etaj 4/8</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>An construcție: 2023</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Parcare subterană</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Lift</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Balcon</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Mobilat</span>
+                            </div>
+                            <div class="feature-item">
+                                <i class="fas fa-check-circle"></i>
+                                <span>Aer condiționat</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column - Seller Info -->
+                <div>
+                    <div class="seller-card">
+                        <div class="seller-info">
+                            <div class="seller-avatar">IB</div>
+                            <div class="seller-details">
+                                <h4>Ionel Bălăuță</h4>
+                                <div class="seller-rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                    <span>(4.8)</span>
+                                </div>
+                                <div style="font-size: 14px; color: var(--text-light);">
+                                    Membru din 2020 • 34 anunțuri
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="contact-buttons">
+                            <button class="btn btn-primary btn-large" onclick="showPhone()">
+                                <i class="fas fa-phone"></i> Afișează telefonul
+                            </button>
+                            <button class="btn btn-success btn-large" onclick="window.location.href='mesaje.html'">
+                                <i class="fas fa-envelope"></i> Trimite mesaj
+                            </button>
+                            <button class="btn btn-outline" onclick="window.location.href='contul-meu.html'">
+                                <i class="fas fa-user"></i> Vezi profilul
+                            </button>
+                        </div>
+
+                        <div class="phone-number" id="phoneNumber" style="display: none;">
+                            <i class="fas fa-phone"></i> 0722 123 456
+                        </div>
+
+                        <div class="safety-tips">
+                            <h4><i class="fas fa-shield-alt"></i> Sfaturi de siguranță</h4>
+                            <ul style="font-size: 13px; line-height: 1.8;">
+                                <li>Nu plătiți în avans</li>
+                                <li>Întâlniți vânzătorul personal</li>
+                                <li>Verificați produsul înainte</li>
+                                <li>Evitați ofertele suspicioase</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Similar Ads -->
+            <div style="margin-top: 60px;">
+                <h2 class="section-title">Anunțuri similare</h2>
+                <div class="ads-grid">
+                    <div class="ad-card">
+                        <div class="ad-image">
+                            <img src="https://via.placeholder.com/300x200?text=Apartament+Similar+1" alt="Similar 1">
+                            <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                        </div>
+                        <div class="ad-content">
+                            <div class="ad-price">115.000 €</div>
+                            <h3 class="ad-title">Apartament 3 camere, Bloc 2022</h3>
+                            <div class="ad-location"><i class="fas fa-map-marker-alt"></i> București, Sector 3</div>
+                            <div class="ad-date">Acum 2 ore</div>
+                        </div>
+                    </div>
+
+                    <div class="ad-card">
+                        <div class="ad-image">
+                            <img src="https://via.placeholder.com/300x200?text=Apartament+Similar+2" alt="Similar 2">
+                            <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                        </div>
+                        <div class="ad-content">
+                            <div class="ad-price">125.000 €</div>
+                            <h3 class="ad-title">Apartament 3 camere, Vedere parc</h3>
+                            <div class="ad-location"><i class="fas fa-map-marker-alt"></i> București, Sector 2</div>
+                            <div class="ad-date">Ieri</div>
+                        </div>
+                    </div>
+
+                    <div class="ad-card">
+                        <div class="ad-image">
+                            <img src="https://via.placeholder.com/300x200?text=Apartament+Similar+3" alt="Similar 3">
+                            <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                        </div>
+                        <div class="ad-content">
+                            <div class="ad-price">110.000 €</div>
+                            <h3 class="ad-title">Apartament 3 camere, Decomandat</h3>
+                            <div class="ad-location"><i class="fas fa-map-marker-alt"></i> București, Sector 1</div>
+                            <div class="ad-date">Acum 2 zile</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // Gallery functionality
+        document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+            thumb.addEventListener('click', function() {
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function showPhone() {
+            document.getElementById('phoneNumber').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+
