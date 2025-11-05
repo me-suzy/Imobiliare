@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Despre Noi - Anunțuri & Oferte</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="account-page">
+        <div class="container" style="max-width: 900px;">
+            <h1 style="margin-bottom: 30px; text-align: center;">Despre Anunțuri & Oferte</h1>
+
+            <div class="form-card">
+                <h2>Cine suntem</h2>
+                <p style="font-size: 18px; line-height: 1.8; color: var(--text-dark);">
+                    <strong>Anunțuri & Oferte</strong> este platforma românească de anunțuri online care 
+                    conectează cumpărători și vânzători din întreaga țară. Misiunea noastră este să facem 
+                    procesul de cumpărare și vânzare simplu, rapid și sigur pentru toată lumea.
+                </p>
+            </div>
+
+            <div class="form-card" style="margin-top: 20px;">
+                <h2>Misiunea noastră</h2>
+                <p style="font-size: 16px; line-height: 1.8; color: var(--text-dark);">
+                    Credem că fiecare persoană ar trebui să aibă acces la o platformă simplă și sigură pentru 
+                    a-și vinde produsele sau serviciile. De aceea, ne dedicăm să oferim:
+                </p>
+                <ul style="font-size: 16px; line-height: 2; color: var(--text-dark); margin-left: 20px;">
+                    <li>Interfață intuitivă și ușor de folosit</li>
+                    <li>Siguranță și protecție împotriva fraudelor</li>
+                    <li>Suport dedicat pentru utilizatori</li>
+                    <li>Servicii gratuite și accesibile</li>
+                    <li>Creștere constantă a funcționalităților</li>
+                </ul>
+            </div>
+
+            <div class="form-card" style="margin-top: 20px;">
+                <h2>Valori</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                    <div style="padding: 20px; background: var(--light-bg); border-radius: 10px;">
+                        <h3><i class="fas fa-shield-alt" style="color: var(--primary-color);"></i> Siguranță</h3>
+                        <p>Protejăm datele utilizatorilor și prevenim fraudele</p>
+                    </div>
+                    <div style="padding: 20px; background: var(--light-bg); border-radius: 10px;">
+                        <h3><i class="fas fa-handshake" style="color: var(--primary-color);"></i> Încredere</h3>
+                        <p>Construim relații de lungă durată cu utilizatorii</p>
+                    </div>
+                    <div style="padding: 20px; background: var(--light-bg); border-radius: 10px;">
+                        <h3><i class="fas fa-rocket" style="color: var(--primary-color);"></i> Inovație</h3>
+                        <p>Îmbunătățim constant platforma cu noi funcționalități</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card" style="margin-top: 20px;">
+                <h2>Statistici</h2>
+                <div class="stats-grid" style="margin-top: 20px;">
+                    <div class="stat-item">
+                        <div class="stat-number">12.300</div>
+                        <div class="stat-label">Anunțuri active</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">7.850</div>
+                        <div class="stat-label">Utilizatori înregistrați</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1.450</div>
+                        <div class="stat-label">Anunțuri publicate zilnic</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Utilizatori mulțumiți</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card" style="margin-top: 20px; text-align: center; padding: 40px;">
+                <h2 style="margin-bottom: 20px;">Alătură-te comunității noastre!</h2>
+                <p style="font-size: 18px; margin-bottom: 30px;">
+                    Fii parte din cea mai mare platformă de anunțuri din România
+                </p>
+                <button class="btn btn-primary btn-large" onclick="window.location.href='publica-anunt.html'">
+                    <i class="fas fa-plus-circle"></i> Publică primul anunț
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
