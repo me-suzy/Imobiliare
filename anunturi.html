@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anunțuri - Toate categoriile</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Anunțuri & Oferte</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html" class="active"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Search and Filter Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-box">
+                <h2>Găsește anunțul perfect</h2>
+                <div class="search-input-group">
+                    <input type="text" class="form-control" id="searchKeyword" placeholder="Ce cauți?">
+                    <input type="text" class="form-control" id="searchLocation" placeholder="Locație">
+                    <button class="btn btn-primary" onclick="searchAds()">
+                        <i class="fas fa-search"></i> Caută
+                    </button>
+                </div>
+
+                <div class="filters">
+                    <div class="form-group">
+                        <label>Categorie</label>
+                        <select class="form-control" id="filterCategory">
+                            <option value="">Toate categoriile</option>
+                            <option value="imobiliare">Imobiliare</option>
+                            <option value="auto-moto">Auto & Moto</option>
+                            <option value="mobilier-casa">Mobilier & Casă</option>
+                            <option value="joburi">Joburi</option>
+                            <option value="electronice">Electronice</option>
+                            <option value="animale">Animale</option>
+                            <option value="fashion">Modă</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preț minim</label>
+                        <input type="number" class="form-control" id="priceMin" placeholder="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Preț maxim</label>
+                        <input type="number" class="form-control" id="priceMax" placeholder="Nelimitat">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Sortează</label>
+                        <select class="form-control" id="sortBy">
+                            <option value="date-desc">Cele mai recente</option>
+                            <option value="date-asc">Cele mai vechi</option>
+                            <option value="price-asc">Preț crescător</option>
+                            <option value="price-desc">Preț descrescător</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Info -->
+            <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3>Rezultate găsite: <span id="resultsCount">42</span></h3>
+            </div>
+
+            <!-- Ads Grid -->
+            <div class="ads-grid" id="adsContainer">
+                <!-- Ad Card 1 -->
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=1'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=Apartament+3+camere" alt="Apartament">
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <span class="ad-badge">Top</span>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">120.000 €</div>
+                        <h3 class="ad-title">Apartament 3 camere, Bloc nou, Parcare</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> București, Sector 2</div>
+                        <div class="ad-date">Publicat azi</div>
+                    </div>
+                </div>
+
+                <!-- Ad Card 2 -->
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=2'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=BMW+X5" alt="BMW X5">
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">28.500 €</div>
+                        <h3 class="ad-title">BMW X5, 2018, 3.0 Diesel, Full Options</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Cluj-Napoca</div>
+                        <div class="ad-date">Publicat azi</div>
+                    </div>
+                </div>
+
+                <!-- Ad Card 3 -->
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=3'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=MacBook+Pro" alt="MacBook">
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <span class="ad-badge">Urgent</span>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">6.500 lei</div>
+                        <h3 class="ad-title">MacBook Pro 16", M1 Pro, 16GB RAM, 512GB SSD</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Timișoara</div>
+                        <div class="ad-date">Acum 3 ore</div>
+                    </div>
+                </div>
+
+                <!-- Ad Card 4 -->
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=4'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=Masa+dining" alt="Masa">
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">2.800 lei</div>
+                        <h3 class="ad-title">Masă dining extensibilă + 6 scaune, Lemn masiv</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Brașov</div>
+                        <div class="ad-date">Acum 5 ore</div>
+                    </div>
+                </div>
+
+                <!-- Ad Card 5 -->
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=5'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=Manager+Vanzari" alt="Job">
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">5.000 - 7.000 lei</div>
+                        <h3 class="ad-title">Manager Vânzări - Retail, Experiență 3+ ani</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> București, Sector 1</div>
+                        <div class="ad-date">Ieri</div>
+                    </div>
+                </div>
+
+                <!-- Ad Card 6 -->
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=6'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=Samsung+S23" alt="Samsung">
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">3.200 lei</div>
+                        <h3 class="ad-title">Samsung Galaxy S23, 256GB, Negru, Sigilat</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Constanța</div>
+                        <div class="ad-date">Ieri</div>
+                    </div>
+                </div>
+
+                <!-- Ad Card 7 -->
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=7'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=Golden+Retriever" alt="Caine">
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">1.500 lei</div>
+                        <h3 class="ad-title">Golden Retriever, pui, 2 luni, Vaccinat</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Iași</div>
+                        <div class="ad-date">Acum 2 zile</div>
+                    </div>
+                </div>
+
+                <!-- Ad Card 8 -->
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=8'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=Vila+4+camere" alt="Vila">
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">285.000 €</div>
+                        <h3 class="ad-title">Vilă 4 camere, 200mp, Curte 500mp, Piscină</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Sibiu</div>
+                        <div class="ad-date">Acum 2 zile</div>
+                    </div>
+                </div>
+
+                <!-- Ad Card 9 -->
+                <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=9'">
+                    <div class="ad-image">
+                        <img src="https://via.placeholder.com/300x200?text=Audi+A6" alt="Audi">
+                        <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                    <div class="ad-content">
+                        <div class="ad-price">35.900 €</div>
+                        <h3 class="ad-title">Audi A6, 2020, 2.0 TDI, Quattro, S-Line</h3>
+                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Oradea</div>
+                        <div class="ad-date">Acum 3 zile</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div style="text-align: center; margin-top: 40px;">
+                <div style="display: inline-flex; gap: 10px; align-items: center;">
+                    <button class="btn btn-outline">« Anterior</button>
+                    <button class="btn btn-primary">1</button>
+                    <button class="btn btn-outline">2</button>
+                    <button class="btn btn-outline">3</button>
+                    <button class="btn btn-outline">4</button>
+                    <button class="btn btn-outline">5</button>
+                    <button class="btn btn-outline">Următorul »</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
