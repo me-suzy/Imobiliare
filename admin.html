@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Marc.ro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-page {
+            padding: 40px 20px;
+            background-color: var(--light-bg);
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            background: linear-gradient(135deg, #d32f2f, #f44336);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-card-large {
+            grid-column: span 2;
+            min-width: 500px;
+        }
+
+        @media (max-width: 768px) {
+            .stat-card-large {
+                grid-column: span 1;
+                min-width: auto;
+            }
+        }
+
+        .stat-card-value {
+            font-size: 36px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.2;
+        }
+
+        .stat-card-large .stat-card-value {
+            font-size: 42px;
+            line-height: 1.3;
+            min-height: 60px;
+        }
+
+        @media (max-width: 1200px) {
+            .stat-card-large .stat-card-value {
+                font-size: 36px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stat-card-large .stat-card-value {
+                font-size: 28px;
+            }
+        }
+
+        .stat-card-label {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .admin-tab {
+            padding: 12px 24px;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .admin-tab.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .admin-content {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: var(--light-bg);
+            font-weight: bold;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .search-bar {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+
+        .search-bar input::placeholder {
+            color: #999;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Marc.ro - Admin</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="admin.html" class="active"><i class="fas fa-shield-alt"></i> Admin</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" id="admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</a>
+                            <a href="admin-parole.html" id="admin-parole-link" style="display: none;"><i class="fas fa-key"></i> Parole</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="admin-page">
+        <div class="container">
+            <div class="admin-header">
+                <h1><i class="fas fa-shield-alt"></i> Panou Administrator</h1>
+                <p>Gestionare completă platformă Marc.ro</p>
+            </div>
+
+            <div class="stats-grid" id="admin-stats">
+                <div class="stat-card">
+                    <div class="stat-card-value">0</div>
+                    <div class="stat-card-label">Total Utilizatori</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">0</div>
+                    <div class="stat-card-label">Total Anunțuri</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">0</div>
+                    <div class="stat-card-label">Anunțuri Active</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">0</div>
+                    <div class="stat-card-label">Utilizatori Noi Azi</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-value">0</div>
+                    <div class="stat-card-label">Anunțuri Noi Azi</div>
+                </div>
+                <div class="stat-card stat-card-large">
+                    <div class="stat-card-value" style="font-size: 32px; word-break: break-word;">0 RON</div>
+                    <div class="stat-card-label">Suma Totală Solduri</div>
+                </div>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" onclick="showTab('utilizatori')">Utilizatori</button>
+                <button class="admin-tab" onclick="showTab('anunturi')">Anunțuri</button>
+                <button class="admin-tab" onclick="showTab('plati')">Plăți</button>
+                <button class="admin-tab" onclick="showTab('sesiuni')">Sesiuni Logare</button>
+                <button class="admin-tab" onclick="showTab('notificari')">Notificări</button>
+                <button class="admin-tab" onclick="window.location.href='admin-parole.html'">
+                    <i class="fas fa-key"></i> Parole
+                </button>
+            </div>
+
+            <div class="admin-content">
+                <div id="admin-content-area">
+                    <!-- Conținutul va fi încărcat dinamic -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
+    <script>
+        let currentTab = 'utilizatori';
+
+        // Verifică dacă e admin
+        async function checkAdmin() {
+            try {
+                const authCheck = await Auth.check();
+                if (!authCheck.autentificat || authCheck.user.tip_cont !== 'admin') {
+                    alert('Acces interzis! Doar administratorii au acces.');
+                    window.location.href = 'index.html';
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                window.location.href = 'index.html';
+                return false;
+            }
+        }
+
+        // Încarcă statisticile
+        async function loadStats() {
+            try {
+                const result = await API.get('admin.php?action=dashboard');
+                const stats = result.stats;
+                
+                document.querySelectorAll('.stat-card-value')[0].textContent = formatNumber(stats.total_utilizatori || 0);
+                document.querySelectorAll('.stat-card-value')[1].textContent = formatNumber(stats.total_anunturi || 0);
+                document.querySelectorAll('.stat-card-value')[2].textContent = formatNumber(stats.anunturi_active || 0);
+                document.querySelectorAll('.stat-card-value')[3].textContent = formatNumber(stats.utilizatori_noi_azi || 0);
+                document.querySelectorAll('.stat-card-value')[4].textContent = formatNumber(stats.anunturi_noi_azi || 0);
+                
+                // Calculează suma solduri din datele locale (dacă există) sau folosește valoarea de la server
+                if (allUtilizatori.length > 0) {
+                    updateTotalSolduri();
+                } else {
+                    document.querySelectorAll('.stat-card-value')[5].textContent = Utils.formatPrice(stats.suma_totala_plati || 0, 'RON');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+        }
+
+        function formatNumber(num) {
+            return new Intl.NumberFormat('ro-RO').format(num);
+        }
+
+        // Afișează tab
+        function showTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.admin-tab').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            switch(tab) {
+                case 'utilizatori':
+                    loadUtilizatori();
+                    break;
+                case 'anunturi':
+                    loadAnunturi();
+                    break;
+                case 'plati':
+                    loadPlati();
+                    break;
+                case 'sesiuni':
+                    loadSesiuni();
+                    break;
+                case 'notificari':
+                    loadNotificari();
+                    break;
+            }
+        }
+
+        // Formatare dată completă cu oră
+        function formatDateTime(dateString) {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleString('ro-RO', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        // Încarcă sesiuni logare
+        async function loadSesiuni() {
+            try {
+                const result = await API.get('admin.php?action=sesiuni');
+                const sesiuni = result.sesiuni || [];
+                
+                const html = `
+                    <h2>Sesiuni de Logare</h2>
+                    <p style="margin-bottom: 20px; color: var(--text-light);">Total: ${result.total || 0} sesiuni</p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Utilizator</th>
+                                <th>Email</th>
+                                <th>Metodă</th>
+                                <th>IP Address</th>
+                                <th>Data Logare</th>
+                                <th>Data Deconectare</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sesiuni.map(s => `
+                                <tr>
+                                    <td>${s.id}</td>
+                                    <td><strong>${s.nume || '-'}</strong></td>
+                                    <td>${s.email || '-'}</td>
+                                    <td>
+                                        <span style="text-transform: capitalize; padding: 4px 8px; background: #e3f2fd; border-radius: 4px;">
+                                            ${s.metoda_autentificare || 'email'}
+                                        </span>
+                                    </td>
+                                    <td>${s.ip_address || '-'}</td>
+                                    <td>
+                                        <div style="font-weight: 500; color: #2196F3;">
+                                            ${formatDateTime(s.data_logare)}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        ${s.data_logout ? 
+                                            `<div style="font-weight: 500; color: #f44336;">
+                                                ${formatDateTime(s.data_logout)}
+                                            </div>` : 
+                                            '<span style="color: #999; font-style: italic;">Încă activă</span>'
+                                        }
+                                    </td>
+                                    <td>
+                                        <span class="status-badge ${s.activ ? 'status-completed' : 'status-pending'}" style="padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                            ${s.activ ? '✓ Activ' : '✗ Închis'}
+                                        </span>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('admin-content-area').innerHTML = html;
+            } catch (error) {
+                console.error('Eroare:', error);
+                document.getElementById('admin-content-area').innerHTML = '<p>Eroare la încărcarea sesiunilor</p>';
+            }
+        }
+
+        // Variabilă globală pentru utilizatori (pentru căutare)
+        let allUtilizatori = [];
+
+        // Încarcă utilizatori
+        async function loadUtilizatori() {
+            try {
+                const result = await API.get('admin.php?action=utilizatori');
+                allUtilizatori = result.utilizatori || [];
+                
+                renderUtilizatoriTable(allUtilizatori);
+            } catch (error) {
+                console.error('Eroare:', error);
+                document.getElementById('admin-content-area').innerHTML = '<p>Eroare la încărcarea utilizatorilor</p>';
+            }
+        }
+        
+        // Inițializează căutarea după ce tabelul este încărcat
+        function initSearch() {
+            const searchInput = document.getElementById('search-utilizatori');
+            if (searchInput) {
+                // Debounce pentru căutare în timp real
+                let searchTimeout;
+                searchInput.addEventListener('input', function(e) {
+                    clearTimeout(searchTimeout);
+                    const searchValue = e.target.value;
+                    
+                    // Caută după o scurtă pauză (300ms) pentru a nu căuta la fiecare tastă
+                    searchTimeout = setTimeout(() => {
+                        filterUtilizatori(searchValue);
+                    }, 300);
+                });
+                
+                // Caută imediat dacă se apasă Enter
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter') {
+                        clearTimeout(searchTimeout);
+                        filterUtilizatori(e.target.value);
+                    }
+                });
+            }
+        }
+
+        // Renderează tabelul cu utilizatori (fără input de căutare)
+        function renderUtilizatoriTable(utilizatori) {
+            // Păstrează valoarea input-ului de căutare dacă există
+            const searchInput = document.getElementById('search-utilizatori');
+            const searchValue = searchInput ? searchInput.value : '';
+            const wasFocused = searchInput && document.activeElement === searchInput;
+            
+            const html = `
+                <h2>Gestionare Utilizatori</h2>
+                <div class="search-bar" style="margin-bottom: 20px;">
+                    <input type="text" id="search-utilizatori" placeholder="Caută utilizatori..." 
+                           value="${searchValue.replace(/"/g, '&quot;')}"
+                           style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 16px;">
+                </div>
+                <div id="search-results-count" style="margin-bottom: 10px; color: var(--text-light);">
+                    Afișați ${utilizatori.length} din ${allUtilizatori.length} utilizatori
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nume</th>
+                            <th>Email</th>
+                            <th>Telefon</th>
+                            <th>Tip Cont</th>
+                            <th>Sold</th>
+                            <th>Credite</th>
+                            <th>Data Creare</th>
+                            <th>Acțiuni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="utilizatori-table-body">
+                        ${utilizatori.length === 0 ? `
+                            <tr>
+                                <td colspan="9" style="text-align: center; padding: 40px; color: var(--text-light);">
+                                    Nu s-au găsit utilizatori care să corespundă criteriilor de căutare.
+                                </td>
+                            </tr>
+                        ` : utilizatori.map(u => `
+                            <tr data-user-id="${u.id}">
+                                <td>${u.id}</td>
+                                <td><strong>${u.nume}</strong></td>
+                                <td>${u.email}</td>
+                                <td>${u.telefon || '-'}</td>
+                                <td>
+                                    <select onchange="updateUserType(${u.id}, this.value)">
+                                        <option value="user" ${u.tip_cont === 'user' ? 'selected' : ''}>User</option>
+                                        <option value="admin" ${u.tip_cont === 'admin' ? 'selected' : ''}>Admin</option>
+                                    </select>
+                                </td>
+                                <td><input type="number" value="${u.sold_cont || 0}" onchange="updateUserField(${u.id}, 'sold_cont', this.value)" style="width: 80px;"></td>
+                                <td><input type="number" value="${u.credite_disponibile || 0}" onchange="updateUserField(${u.id}, 'credite_disponibile', this.value)" style="width: 60px;"></td>
+                                <td>${Utils.formatDate(u.data_creare)}</td>
+                                <td>
+                                    <button class="btn btn-small" style="background: var(--primary-color); color: white; margin-right: 5px;" onclick="editUser(${u.id})">
+                                        <i class="fas fa-edit"></i> Modifică
+                                    </button>
+                                    <button class="btn btn-small btn-outline" style="color: var(--danger-color);" onclick="deleteUser(${u.id})">
+                                        <i class="fas fa-trash"></i> Șterge
+                                    </button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('admin-content-area').innerHTML = html;
+            
+            // Inițializează căutarea
+            initSearch();
+            
+            // Restabilește focus-ul dacă era activ înainte
+            if (wasFocused) {
+                setTimeout(() => {
+                    const newSearchInput = document.getElementById('search-utilizatori');
+                    if (newSearchInput) {
+                        newSearchInput.focus();
+                        // Plasează cursorul la sfârșitul textului
+                        const len = newSearchInput.value.length;
+                        newSearchInput.setSelectionRange(len, len);
+                    }
+                }, 10);
+            }
+        }
+
+        // Funcția removeDiacritics este definită în config.js (globală)
+
+        // Normalizează un număr de telefon (elimină spații, caractere speciale)
+        function normalizePhone(phone) {
+            if (!phone) return '';
+            // Convert to string, elimină spații, cratime, paranteze, plus și alte caractere speciale
+            // Păstrează doar cifrele
+            return phone.toString().replace(/[\s\-\(\)\+\.]/g, '');
+        }
+
+        // Filtrare utilizatori (căutare live) - doar actualizează tbody-ul, nu re-renderează totul
+        function filterUtilizatori(searchTerm) {
+            // Normalizează termenul de căutare: elimină diacritice și spații pentru telefon
+            const searchTermCleaned = (searchTerm || '').trim();
+            
+            // Pentru căutare în nume și email - elimină diacriticele
+            const term = removeDiacritics(searchTermCleaned);
+            
+            // Pentru căutare în telefon - elimină toate caracterele non-numerice
+            const termPhone = normalizePhone(searchTermCleaned);
+            
+            let filtered;
+            if (!term && !termPhone) {
+                filtered = allUtilizatori;
+            } else {
+                filtered = allUtilizatori.filter(u => {
+                    // Caută în Nume și Email (cu diacritice eliminate)
+                    const numeNormalized = removeDiacritics(u.nume || '');
+                    const emailNormalized = removeDiacritics(u.email || '');
+                    const matchNume = numeNormalized.includes(term);
+                    const matchEmail = emailNormalized.includes(term);
+                    
+                    // Caută în Telefon (normalizat, doar cifre)
+                    // Verifică dacă telefonul există și conține termenul de căutare
+                    const telefonNormalized = normalizePhone(u.telefon || '');
+                    const matchTelefon = telefonNormalized && termPhone && telefonNormalized.includes(termPhone);
+                    
+                    // Debug logging (doar pentru development)
+                    if (termPhone && telefonNormalized) {
+                        console.log('Căutare telefon:', {
+                            termPhone: termPhone,
+                            telefonNormalized: telefonNormalized,
+                            match: matchTelefon,
+                            telefonOriginal: u.telefon
+                        });
+                    }
+                    
+                    return matchNume || matchEmail || matchTelefon;
+                });
+            }
+            
+            // Actualizează doar tbody-ul și counter-ul, nu re-renderează input-ul
+            const tbody = document.getElementById('utilizatori-table-body');
+            const counter = document.getElementById('search-results-count');
+            
+            if (tbody) {
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="9" style="text-align: center; padding: 40px; color: var(--text-light);">
+                                Nu s-au găsit utilizatori care să corespundă criteriilor de căutare.
+                            </td>
+                        </tr>
+                    `;
+                } else {
+                    tbody.innerHTML = filtered.map(u => `
+                        <tr data-user-id="${u.id}">
+                            <td>${u.id}</td>
+                            <td><strong>${u.nume}</strong></td>
+                            <td>${u.email}</td>
+                            <td>${u.telefon || '-'}</td>
+                            <td>
+                                <select onchange="updateUserType(${u.id}, this.value)">
+                                    <option value="user" ${u.tip_cont === 'user' ? 'selected' : ''}>User</option>
+                                    <option value="admin" ${u.tip_cont === 'admin' ? 'selected' : ''}>Admin</option>
+                                </select>
+                            </td>
+                            <td><input type="number" value="${u.sold_cont || 0}" onchange="updateUserField(${u.id}, 'sold_cont', this.value)" style="width: 80px;"></td>
+                            <td><input type="number" value="${u.credite_disponibile || 0}" onchange="updateUserField(${u.id}, 'credite_disponibile', this.value)" style="width: 60px;"></td>
+                            <td>${Utils.formatDate(u.data_creare)}</td>
+                            <td>
+                                <button class="btn btn-small" style="background: var(--primary-color); color: white; margin-right: 5px;" onclick="editUser(${u.id})">
+                                    <i class="fas fa-edit"></i> Modifică
+                                </button>
+                                <button class="btn btn-small btn-outline" style="color: var(--danger-color);" onclick="deleteUser(${u.id})">
+                                    <i class="fas fa-trash"></i> Șterge
+                                </button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            }
+            
+            if (counter) {
+                counter.textContent = `Afișați ${filtered.length} din ${allUtilizatori.length} utilizatori`;
+            }
+        }
+
+        // Încarcă plăți
+        async function loadPlati() {
+            try {
+                const result = await API.get('admin.php?action=plati');
+                const plati = result.plati || [];
+                
+                const html = `
+                    <h2>Gestionare Plăți</h2>
+                    <p style="margin-bottom: 20px; color: var(--text-light);">
+                        Total: ${result.total || 0} plăți
+                    </p>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Utilizator</th>
+                                <th>Email</th>
+                                <th>Telefon</th>
+                                <th>Tip Plată</th>
+                                <th>Anunț</th>
+                                <th>Sumă</th>
+                                <th>Status</th>
+                                <th>ID Tranzacție</th>
+                                <th>Data Plată</th>
+                                <th>Ultima Actualizare</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${plati.length === 0 ? `
+                                <tr>
+                                    <td colspan="11" style="text-align: center; padding: 40px; color: var(--text-light);">
+                                        Nu există plăți în baza de date.
+                                    </td>
+                                </tr>
+                            ` : plati.map(p => `
+                                <tr>
+                                    <td>${p.id}</td>
+                                    <td><strong>${p.nume_utilizator || '-'}</strong></td>
+                                    <td>${p.email_utilizator || '-'}</td>
+                                    <td>${p.telefon_utilizator || '-'}</td>
+                                    <td>
+                                        <span style="padding: 4px 8px; background: ${p.tip === 'promovare' ? '#ff9800' : p.tip === 'pachet' ? '#2196F3' : '#4CAF50'}; color: white; border-radius: 4px; text-transform: capitalize; font-size: 12px;">
+                                            ${p.tip === 'promovare' ? '📢 Promovare' : p.tip === 'pachet' ? '📦 Pachet' : p.tip === 'credit' ? '💰 Credit' : p.tip || '-'}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        ${p.titlu_anunt ? 
+                                            `<a href="anunt-detalii.html?id=${p.id_anunt}" style="color: var(--primary-color); text-decoration: none;" title="${p.titlu_anunt}">
+                                                ${p.titlu_anunt.length > 25 ? p.titlu_anunt.substring(0, 25) + '...' : p.titlu_anunt}
+                                            </a>` : 
+                                            '<span style="color: #999;">-</span>'
+                                        }
+                                    </td>
+                                    <td><strong style="color: #4CAF50; font-size: 16px;">${Utils.formatPrice(p.valoare || 0, p.moneda || 'RON')}</strong></td>
+                                    <td>
+                                        <span class="status-badge ${
+                                            p.status === 'completed' ? 'status-completed' : 
+                                            p.status === 'pending' ? 'status-pending' : 
+                                            p.status === 'failed' ? 'status-pending' : 
+                                            'status-pending'
+                                        }" style="padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                            ${p.status === 'completed' ? '✓ Finalizată' : 
+                                              p.status === 'pending' ? '⏳ În așteptare' : 
+                                              p.status === 'failed' ? '✗ Eșuată' : 
+                                              p.status === 'refunded' ? '↩ Rambursată' : p.status}
+                                        </span>
+                                    </td>
+                                    <td><code style="background: #f5f5f5; padding: 2px 6px; border-radius: 3px; font-size: 11px; font-family: monospace;">${p.id_tranzactie || '-'}</code></td>
+                                    <td>
+                                        <div style="font-weight: 500; color: #2196F3; white-space: nowrap;">
+                                            ${formatDateTime(p.data_creare)}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        ${p.data_actualizare && p.data_actualizare !== p.data_creare ? 
+                                            `<div style="font-weight: 500; color: #666; font-size: 12px; white-space: nowrap;">
+                                                ${formatDateTime(p.data_actualizare)}
+                                            </div>` : 
+                                            '<span style="color: #999;">-</span>'
+                                        }
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                
+                document.getElementById('admin-content-area').innerHTML = html;
+            } catch (error) {
+                console.error('Eroare:', error);
+                document.getElementById('admin-content-area').innerHTML = '<p>Eroare la încărcarea plăților</p>';
+            }
+        }
+
+        // Variabilă pentru tab-ul curent de anunțuri
+        let currentAdTab = 'all';
+        let allAds = [];
+
+        // Variabilă pentru numărările anunțurilor
+        let adCounts = {
+            toate: 0,
+            pending: 0,
+            active: 0,
+            expired: 0
+        };
+
+        // Încarcă numărările anunțurilor
+        async function loadAdCounts() {
+            try {
+                const result = await API.get('admin.php?action=anunturi-counts');
+                if (result) {
+                    adCounts = {
+                        toate: result.total_toate || 0,
+                        pending: result.pending || 0,
+                        active: result.active || 0,
+                        expired: result.expired || 0
+                    };
+                }
+            } catch (error) {
+                console.error('Eroare la încărcarea numărărilor:', error);
+            }
+        }
+
+        // Încarcă anunțuri
+        async function loadAnunturi(status = null) {
+            try {
+                currentAdTab = status || 'all';
+                const url = status ? `admin.php?action=anunturi&status=${status}` : 'admin.php?action=anunturi';
+                const result = await API.get(url);
+                allAds = result.anunturi || [];
+                
+                // Actualizează numărările dacă sunt returnate în răspuns
+                if (result.counts) {
+                    adCounts = {
+                        toate: result.counts.toate || 0,
+                        pending: result.counts.pending || 0,
+                        active: result.counts.active || 0,
+                        expired: result.counts.expired || 0
+                    };
+                } else {
+                    // Dacă nu sunt returnate, le încarcă separat
+                    await loadAdCounts();
+                }
+                
+                const html = `
+                    <h2>Gestionare Anunțuri</h2>
+                    <div style="margin-bottom: 20px;">
+                        <button class="admin-tab ${!status ? 'active' : ''}" onclick="loadAnunturi()" style="margin-right: 10px;">
+                            Toate (${adCounts.toate})
+                        </button>
+                        <button class="admin-tab ${status === 'pending' ? 'active' : ''}" onclick="loadAnunturi('pending')" style="margin-right: 10px;">
+                            În așteptare (${adCounts.pending})
+                        </button>
+                        <button class="admin-tab ${status === 'active' ? 'active' : ''}" onclick="loadAnunturi('active')" style="margin-right: 10px;">
+                            Active (${adCounts.active})
+                        </button>
+                        <button class="admin-tab ${status === 'expired' ? 'active' : ''}" onclick="loadAnunturi('expired')">
+                            Expirate (${adCounts.expired})
+                        </button>
+                    </div>
+                    <div style="margin-bottom: 15px; color: var(--text-light);">
+                        Total: ${result.total || 0} anunțuri
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px;"><input type="checkbox" id="select-all-ads" onchange="toggleSelectAllAds(this.checked)"></th>
+                                <th>ID</th>
+                                <th>Imagine</th>
+                                <th>Titlu</th>
+                                <th>Utilizator</th>
+                                <th>Categorie</th>
+                                <th>Preț</th>
+                                <th>Status</th>
+                                <th>Vizualizări</th>
+                                <th>Data Creare</th>
+                                <th>Acțiuni</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${allAds.length === 0 ? `
+                                <tr>
+                                    <td colspan="11" style="text-align: center; padding: 40px; color: var(--text-light);">
+                                        Nu există anunțuri.
+                                    </td>
+                                </tr>
+                            ` : allAds.map(a => {
+                                const imgUrl = a.imagini && a.imagini.length > 0 ? a.imagini[0] : 'https://via.placeholder.com/80x60?text=Anunț';
+                                const statusColors = {
+                                    'activ': { bg: '#4CAF50', text: 'Activ' },
+                                    'inactiv': { bg: '#FF9800', text: 'În așteptare' },
+                                    'vandut': { bg: '#2196F3', text: 'Vândut' },
+                                    'sters': { bg: '#F44336', text: 'Șters' }
+                                };
+                                const statusInfo = statusColors[a.status] || statusColors['inactiv'];
+                                const isExpired = a.expirat || false;
+                                const zileRamase = a.zile_ramase || 0;
+                                
+                                return `
+                                    <tr data-ad-id="${a.id}" ${isExpired ? 'style="opacity: 0.6;"' : ''}>
+                                        <td><input type="checkbox" class="ad-checkbox" value="${a.id}"></td>
+                                        <td>${a.id}</td>
+                                        <td>
+                                            <img src="${imgUrl}" alt="${a.titlu}" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;">
+                                        </td>
+                                        <td>
+                                            <strong>${a.titlu.substring(0, 40)}${a.titlu.length > 40 ? '...' : ''}</strong>
+                                            ${isExpired ? '<br><small style="color: #F44336;">⚠ Expirat</small>' : zileRamase > 0 ? `<br><small style="color: #999;">${zileRamase} zile rămase</small>` : ''}
+                                        </td>
+                                        <td>
+                                            <div>${a.nume_utilizator}</div>
+                                            <small style="color: var(--text-light);">${a.email_utilizator}</small>
+                                            ${a.telefon_utilizator ? `<br><small style="color: var(--text-light);">${a.telefon_utilizator}</small>` : ''}
+                                        </td>
+                                        <td>${a.categorie}</td>
+                                        <td><strong>${Utils.formatPrice(a.pret, a.moneda)}</strong></td>
+                                        <td>
+                                            <span style="background: ${statusInfo.bg}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                                ${statusInfo.text}
+                                            </span>
+                                        </td>
+                                        <td>${a.vizualizari || 0}</td>
+                                        <td>
+                                            <div style="font-size: 12px;">${formatDateTime(a.data_creare)}</div>
+                                        </td>
+                                        <td>
+                                            <div style="display: flex; flex-direction: column; gap: 5px;">
+                                                ${a.status === 'inactiv' ? `
+                                                    <button class="btn btn-small" style="background: #4CAF50; color: white;" onclick="approveAd(${a.id})" title="Aprobă anunțul">
+                                                        <i class="fas fa-check"></i> Aprobă
+                                                    </button>
+                                                    <button class="btn btn-small" style="background: #F44336; color: white;" onclick="rejectAd(${a.id})" title="Respinge anunțul">
+                                                        <i class="fas fa-times"></i> Respinge
+                                                    </button>
+                                                ` : a.status === 'activ' ? `
+                                                    <button class="btn btn-small" style="background: #FF9800; color: white;" onclick="deactivateAd(${a.id})" title="Dezactivează anunțul">
+                                                        <i class="fas fa-pause"></i> Dezactivează
+                                                    </button>
+                                                ` : ''}
+                                                <button class="btn btn-small btn-outline" onclick="window.location.href='anunt-detalii.html?id=${a.id}'" title="Vezi detalii">
+                                                    <i class="fas fa-eye"></i> Vezi
+                                                </button>
+                                                <button class="btn btn-small btn-outline" style="color: #F44336;" onclick="deleteAdAdmin(${a.id})" title="Șterge anunțul">
+                                                    <i class="fas fa-trash"></i> Șterge
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `;
+                            }).join('')}
+                        </tbody>
+                    </table>
+                    ${allAds.length > 0 ? `
+                        <div style="margin-top: 20px; display: flex; gap: 10px; align-items: center;">
+                            <button class="btn btn-outline" onclick="bulkApproveAds()" style="background: #4CAF50; color: white;">
+                                <i class="fas fa-check"></i> Aprobă selectate
+                            </button>
+                            <button class="btn btn-outline" onclick="bulkRejectAds()" style="background: #F44336; color: white;">
+                                <i class="fas fa-times"></i> Respinge selectate
+                            </button>
+                            <button class="btn btn-outline" onclick="bulkDeleteAds()" style="color: #F44336;">
+                                <i class="fas fa-trash"></i> Șterge selectate
+                            </button>
+                        </div>
+                    ` : ''}
+                `;
+                
+                document.getElementById('admin-content-area').innerHTML = html;
+            } catch (error) {
+                console.error('Eroare:', error);
+                document.getElementById('admin-content-area').innerHTML = '<p>Eroare la încărcarea anunțurilor</p>';
+            }
+        }
+
+        // Funcții pentru acțiuni asupra anunțurilor
+        function toggleSelectAllAds(checked) {
+            document.querySelectorAll('.ad-checkbox').forEach(cb => cb.checked = checked);
+        }
+
+        function getSelectedAdIds() {
+            return Array.from(document.querySelectorAll('.ad-checkbox:checked')).map(cb => parseInt(cb.value));
+        }
+
+        async function approveAd(adId) {
+            if (!confirm('Ești sigur că vrei să aprobi acest anunț?')) return;
+            
+            try {
+                await API.put('admin.php', { anunt_id: adId, status: 'activ', data_activare: 'now' });
+                Utils.showNotification('Anunț aprobat cu succes!', 'success');
+                // După aprobare revino pe tab-ul "Toate" pentru a vedea lista actualizată
+                await loadAnunturi();
+                // Reîncarcă statisticile din dashboard
+                await loadStats();
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la aprobare anunț!', 'error');
+            }
+        }
+
+        async function rejectAd(adId) {
+            if (!confirm('Ești sigur că vrei să respingi acest anunț? Anunțul va fi șters.')) return;
+            
+            try {
+                await API.put('admin.php', { anunt_id: adId, status: 'sters' });
+                Utils.showNotification('Anunț respins și șters!', 'success');
+                await loadAnunturi(currentAdTab);
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la respingere anunț!', 'error');
+            }
+        }
+
+        async function deactivateAd(adId) {
+            if (!confirm('Ești sigur că vrei să dezactivezi acest anunț?')) return;
+            
+            try {
+                await API.put('admin.php', { anunt_id: adId, status: 'inactiv' });
+                Utils.showNotification('Anunț dezactivat!', 'success');
+                await loadAnunturi(currentAdTab);
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la dezactivare anunț!', 'error');
+            }
+        }
+
+        async function deleteAdAdmin(adId) {
+            if (!confirm('Ești sigur că vrei să ștergi acest anunț? Această acțiune este ireversibilă!')) return;
+            
+            try {
+                await API.put('admin.php', { anunt_id: adId, status: 'sters' });
+                Utils.showNotification('Anunț șters!', 'success');
+                await loadAnunturi(currentAdTab);
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la ștergere anunț!', 'error');
+            }
+        }
+
+        async function bulkApproveAds() {
+            const selectedIds = getSelectedAdIds();
+            if (selectedIds.length === 0) {
+                Utils.showNotification('Selectează cel puțin un anunț!', 'warning');
+                return;
+            }
+            
+            if (!confirm(`Ești sigur că vrei să aprobi ${selectedIds.length} anunț(uri)?`)) return;
+            
+            try {
+                for (const adId of selectedIds) {
+                    await API.put('admin.php', { anunt_id: adId, status: 'activ' });
+                }
+                Utils.showNotification(`${selectedIds.length} anunț(uri) aprobate cu succes!`, 'success');
+                await loadAnunturi();
+                await loadStats();
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la aprobare anunțuri!', 'error');
+            }
+        }
+
+        async function bulkRejectAds() {
+            const selectedIds = getSelectedAdIds();
+            if (selectedIds.length === 0) {
+                Utils.showNotification('Selectează cel puțin un anunț!', 'warning');
+                return;
+            }
+            
+            if (!confirm(`Ești sigur că vrei să respingi ${selectedIds.length} anunț(uri)? Anunțurile vor fi șterse.`)) return;
+            
+            try {
+                for (const adId of selectedIds) {
+                    await API.put('admin.php', { anunt_id: adId, status: 'sters' });
+                }
+                Utils.showNotification(`${selectedIds.length} anunț(uri) respinse și șterse!`, 'success');
+                await loadAnunturi(currentAdTab);
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la respingere anunțuri!', 'error');
+            }
+        }
+
+        async function bulkDeleteAds() {
+            const selectedIds = getSelectedAdIds();
+            if (selectedIds.length === 0) {
+                Utils.showNotification('Selectează cel puțin un anunț!', 'warning');
+                return;
+            }
+            
+            if (!confirm(`Ești sigur că vrei să ștergi ${selectedIds.length} anunț(uri)? Această acțiune este ireversibilă!`)) return;
+            
+            try {
+                for (const adId of selectedIds) {
+                    await API.put('admin.php', { anunt_id: adId, status: 'sters' });
+                }
+                Utils.showNotification(`${selectedIds.length} anunț(uri) șterse!`, 'success');
+                await loadAnunturi(currentAdTab);
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la ștergere anunțuri!', 'error');
+            }
+        }
+
+        // Funcții pentru actualizare
+        async function updateUserType(userId, tipCont) {
+            try {
+                await API.put('admin.php', { id: userId, tip_cont: tipCont });
+                Utils.showNotification('Tip cont actualizat', 'success');
+            } catch (error) {
+                alert('Eroare la actualizare!');
+            }
+        }
+
+        async function updateUserField(userId, field, value) {
+            try {
+                const data = { id: userId };
+                data[field] = value;
+                
+                // Salvează valoarea veche pentru rollback în caz de eroare
+                const user = allUtilizatori.find(u => u.id === userId);
+                const oldValue = user ? user[field] : null;
+                
+                await API.put('admin.php', data);
+                
+                // Actualizează valoarea în array-ul local
+                if (user) {
+                    user[field] = field === 'sold_cont' ? parseFloat(value) || 0 : 
+                                 field === 'credite_disponibile' ? parseInt(value) || 0 : value;
+                }
+                
+                // Dacă s-a actualizat sold_cont, actualizează suma totală solduri în timp real
+                if (field === 'sold_cont') {
+                    updateTotalSolduri();
+                }
+                
+                Utils.showNotification('Câmp actualizat', 'success');
+            } catch (error) {
+                // Revenire la valoarea veche în caz de eroare
+                const user = allUtilizatori.find(u => u.id === userId);
+                if (user && oldValue !== null) {
+                    user[field] = oldValue;
+                    // Reîncarcă tabelul pentru a restabili valoarea veche în UI
+                    const searchInput = document.getElementById('search-utilizatori');
+                    const searchTerm = searchInput ? searchInput.value : '';
+                    filterUtilizatori(searchTerm);
+                }
+                alert('Eroare la actualizare!');
+            }
+        }
+        
+        // Actualizează suma totală solduri în timp real
+        function updateTotalSolduri() {
+            const totalSolduri = allUtilizatori.reduce((sum, user) => {
+                return sum + (parseFloat(user.sold_cont) || 0);
+            }, 0);
+            
+            // Actualizează card-ul de statistici (al 6-lea card - index 5)
+            const statsCards = document.querySelectorAll('.stat-card-value');
+            if (statsCards.length >= 6) {
+                const solduriCard = statsCards[5];
+                solduriCard.textContent = Utils.formatPrice(totalSolduri, 'RON');
+                // Stilurile sunt aplicate prin CSS (.stat-card-large .stat-card-value)
+            }
+        }
+
+        async function updateAdStatus(adId, status) {
+            try {
+                await API.put('admin.php', { anunt_id: adId, status });
+                Utils.showNotification('Status anunț actualizat', 'success');
+                // Reîncarcă anunțurile pentru a actualiza lista
+                await loadAnunturi(currentAdTab);
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la actualizare status!', 'error');
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('Ești sigur că vrei să ștergi acest utilizator?')) {
+                return;
+            }
+            
+            try {
+                await API.delete('admin.php', { id: userId });
+                Utils.showNotification('Utilizator șters', 'success');
+                loadUtilizatori();
+            } catch (error) {
+                alert('Eroare la ștergere!');
+            }
+        }
+
+        // Editare utilizator (deschide modal)
+        function editUser(userId) {
+            const user = allUtilizatori.find(u => u.id === userId);
+            if (!user) {
+                alert('Utilizatorul nu a fost găsit!');
+                return;
+            }
+            
+            // Creează modal pentru editare
+            const modal = document.createElement('div');
+            modal.className = 'admin-modal';
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 10px; max-width: 500px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+                    <h2 style="margin-top: 0; color: var(--primary-color);">
+                        <i class="fas fa-edit"></i> Modifică Utilizator #${user.id}
+                    </h2>
+                    <form id="edit-user-form" onsubmit="saveUserChanges(event, ${user.id})">
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Nume:</label>
+                            <input type="text" id="edit-nume" value="${user.nume || ''}" required 
+                                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Email:</label>
+                            <input type="email" id="edit-email" value="${user.email || ''}" required 
+                                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Telefon:</label>
+                            <input type="text" id="edit-telefon" value="${user.telefon || ''}" 
+                                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Tip Cont:</label>
+                            <select id="edit-tip-cont" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                                <option value="user" ${user.tip_cont === 'user' ? 'selected' : ''}>User</option>
+                                <option value="admin" ${user.tip_cont === 'admin' ? 'selected' : ''}>Admin</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Sold (RON):</label>
+                            <input type="number" step="0.01" id="edit-sold" value="${user.sold_cont || 0}" 
+                                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: bold;">Credite:</label>
+                            <input type="number" id="edit-credite" value="${user.credite_disponibile || 0}" 
+                                   style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box;">
+                        </div>
+                        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                            <button type="button" onclick="closeEditModal()" 
+                                    style="padding: 10px 20px; border: 1px solid #ddd; background: white; border-radius: 5px; cursor: pointer;">
+                                Anulează
+                            </button>
+                            <button type="submit" 
+                                    style="padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">
+                                <i class="fas fa-save"></i> Salvează
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Închide modal la click în afara
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeEditModal();
+                }
+            });
+        }
+
+        // Salvează modificările utilizatorului
+        async function saveUserChanges(event, userId) {
+            event.preventDefault();
+            
+            const data = {
+                id: userId,
+                nume: document.getElementById('edit-nume').value.trim(),
+                email: document.getElementById('edit-email').value.trim(),
+                telefon: document.getElementById('edit-telefon').value.trim(),
+                tip_cont: document.getElementById('edit-tip-cont').value,
+                sold_cont: parseFloat(document.getElementById('edit-sold').value) || 0,
+                credite_disponibile: parseInt(document.getElementById('edit-credite').value) || 0
+            };
+            
+            // Salvează valoarea veche a soldului pentru actualizare
+            const user = allUtilizatori.find(u => u.id === userId);
+            const oldSold = user ? (parseFloat(user.sold_cont) || 0) : 0;
+            
+            try {
+                await API.put('admin.php', data);
+                
+                // Actualizează valoarea în array-ul local
+                if (user) {
+                    user.nume = data.nume;
+                    user.email = data.email;
+                    user.telefon = data.telefon;
+                    user.tip_cont = data.tip_cont;
+                    user.sold_cont = data.sold_cont;
+                    user.credite_disponibile = data.credite_disponibile;
+                }
+                
+                // Dacă s-a schimbat soldul, actualizează suma totală solduri
+                if (oldSold !== data.sold_cont) {
+                    updateTotalSolduri();
+                }
+                
+                Utils.showNotification('Utilizator actualizat cu succes!', 'success');
+                closeEditModal();
+                
+                // Reîncarcă doar tabelul (nu toată lista) pentru a reflecta modificările
+                const searchInput = document.getElementById('search-utilizatori');
+                const searchTerm = searchInput ? searchInput.value : '';
+                filterUtilizatori(searchTerm);
+            } catch (error) {
+                console.error('Eroare:', error);
+                const errorMsg = error.message || 'Eroare necunoscută';
+                alert('Eroare la actualizarea utilizatorului: ' + errorMsg);
+            }
+        }
+
+        // Închide modal
+        function closeEditModal() {
+            const modal = document.querySelector('.admin-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Inițializare
+        document.addEventListener('DOMContentLoaded', async function() {
+            const isAdmin = await checkAdmin();
+            if (isAdmin) {
+                loadStats();
+                loadUtilizatori();
+                setInterval(loadStats, 60000); // Reîmprospătează statisticile
+            }
+        });
+    </script>
+</body>
+</html>
+
