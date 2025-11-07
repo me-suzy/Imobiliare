@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contul Meu - Anunțuri & Oferte</title>
+    <title>Contul Meu - Marc.ro</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -14,20 +14,28 @@
             <nav class="navbar">
                 <div class="logo" onclick="window.location.href='index.html'">
                     <i class="fas fa-circle-notch"></i>
-                    <span>Anunțuri & Oferte</span>
+                    <span>Marc.ro</span>
                 </div>
                 <ul class="nav-menu">
                     <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
                     <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
                     <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
                     <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li><a href="chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+                    <li><a href="notificari.html" class="notificari-link">
+                        <i class="fas fa-bell"></i> Notificări
+                        <span class="notificari-badge" id="notificari-badge" style="display: none;">0</span>
+                    </a></li>
                     <li class="dropdown">
                         <a href="#" class="user-menu active"><i class="fas fa-user-circle"></i></a>
                         <div class="dropdown-content">
                             <a href="contul-meu.html">Contul Meu</a>
                             <a href="anunturi-mele.html">Anunțurile Mele</a>
                             <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
                             <a href="setari.html">Setări</a>
+                            <a href="#" id="admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</a>
                             <a href="#" onclick="logout()">Deconectare</a>
                         </div>
                     </li>
@@ -49,12 +57,12 @@
                         <i class="fas fa-user"></i>
                     </div>
                     <div>
-                        <h2>Ionel Bălăuță</h2>
+                        <h2 id="user-name">Utilizator</h2>
                         <p style="color: var(--text-light);">
-                            <i class="fas fa-envelope"></i> ionel.balauta@email.com
+                            <i class="fas fa-envelope"></i> <span id="user-email">email@example.com</span>
                         </p>
                         <p style="color: var(--text-light);">
-                            <i class="fas fa-phone"></i> 0722 123 456
+                            <i class="fas fa-phone"></i> <span id="user-phone">-</span>
                         </p>
                     </div>
                 </div>
@@ -74,10 +82,10 @@
                     <i class="fas fa-list"></i> Anunțurile mele
                 </button>
                 <button class="tab-btn" onclick="window.location.href='mesaje.html'">
-                    <i class="fas fa-envelope"></i> Mesaje (5)
+                    <i class="fas fa-envelope"></i> Mesaje
                 </button>
                 <button class="tab-btn" onclick="window.location.href='favorite.html'">
-                    <i class="fas fa-heart"></i> Favorite (12)
+                    <i class="fas fa-heart"></i> Favorite
                 </button>
                 <button class="tab-btn" onclick="window.location.href='setari.html'">
                     <i class="fas fa-cog"></i> Setări
@@ -92,7 +100,7 @@
                         <div style="font-size: 48px; color: var(--primary-color); margin-bottom: 10px;">
                             <i class="fas fa-bullhorn"></i>
                         </div>
-                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">8</div>
+                        <div id="stat-active" style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">0</div>
                         <div style="color: var(--text-light);">Anunțuri active</div>
                     </div>
 
@@ -100,7 +108,7 @@
                         <div style="font-size: 48px; color: var(--success-color); margin-bottom: 10px;">
                             <i class="fas fa-eye"></i>
                         </div>
-                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">1.234</div>
+                        <div id="stat-views" style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">0</div>
                         <div style="color: var(--text-light);">Vizualizări totale</div>
                     </div>
 
@@ -108,7 +116,7 @@
                         <div style="font-size: 48px; color: var(--warning-color); margin-bottom: 10px;">
                             <i class="fas fa-star"></i>
                         </div>
-                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">4.8</div>
+                        <div id="stat-rating" style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">0</div>
                         <div style="color: var(--text-light);">Rating mediu</div>
                     </div>
 
@@ -116,7 +124,7 @@
                         <div style="font-size: 48px; color: #2196F3; margin-bottom: 10px;">
                             <i class="fas fa-comments"></i>
                         </div>
-                        <div style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">24</div>
+                        <div id="stat-messages" style="font-size: 32px; font-weight: bold; margin-bottom: 5px;">0</div>
                         <div style="color: var(--text-light);">Mesaje noi</div>
                     </div>
                 </div>
@@ -236,7 +244,7 @@
                     <a href="despre.html">Despre noi</a>
                 </div>
                 <div class="footer-copyright">
-                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
                 </div>
                 <div class="footer-social">
                     <a href="#"><i class="fab fa-facebook"></i></a>
@@ -248,12 +256,75 @@
         </div>
     </footer>
 
+    <script src="js/config.js"></script>
     <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
     <script>
+        let accountUser = null;
+
         function showTab(tabName) {
-            // Tab switching logic here
             console.log('Switching to tab:', tabName);
         }
+
+        async function loadAccountData() {
+            try {
+                const auth = await Auth.check();
+                if (!auth.autentificat || !auth.user) {
+                    Utils.showNotification('Trebuie să fii autentificat pentru a accesa această pagină.', 'warning');
+                    setTimeout(() => {
+                        window.location.href = 'login.html?return=contul-meu.html';
+                    }, 1000);
+                    return;
+                }
+
+                accountUser = auth.user;
+                populateAccountHeader(accountUser);
+                await loadAccountStats();
+            } catch (error) {
+                console.error('Eroare la încărcarea datelor contului:', error);
+                Utils.showNotification('Nu am putut încărca datele contului.', 'error');
+            }
+        }
+
+        function populateAccountHeader(user) {
+            const nameEl = document.getElementById('user-name');
+            const emailEl = document.getElementById('user-email');
+            const phoneEl = document.getElementById('user-phone');
+
+            if (nameEl) nameEl.textContent = user.nume || 'Utilizator';
+            if (emailEl) emailEl.textContent = user.email || 'email@example.com';
+            if (phoneEl) phoneEl.textContent = user.telefon || '-';
+        }
+
+        async function loadAccountStats() {
+            try {
+                const countsResp = await fetch('api/anunturi-mele.php?action=count', {
+                    credentials: 'include'
+                });
+                const countsData = await countsResp.json();
+
+                const statActive = document.getElementById('stat-active');
+                if (statActive) statActive.textContent = countsData.active ?? 0;
+
+                const statMessages = document.getElementById('stat-messages');
+                if (statMessages) statMessages.textContent = accountUser?.mesaje_noi ?? 0;
+
+                const statsResp = await fetch('api/utilizatori.php?action=stats', {
+                    credentials: 'include'
+                });
+                if (statsResp.ok) {
+                    const statsData = await statsResp.json();
+                    const statViews = document.getElementById('stat-views');
+                    const statRating = document.getElementById('stat-rating');
+                    if (statViews) statViews.textContent = statsData.total_vizualizari ?? 0;
+                    if (statRating) statRating.textContent = statsData.rating_med ?? 0;
+                }
+            } catch (error) {
+                console.warn('Nu s-au putut încărca statisticile contului:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadAccountData);
     </script>
 </body>
 </html>
