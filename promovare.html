@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promovare Anunț - Marc.ro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .promovare-page {
+            padding: 40px 20px;
+            background-color: var(--light-bg);
+            min-height: 80vh;
+        }
+
+        .promovare-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .promovare-header {
+            background: linear-gradient(135deg, var(--primary-color), #FF6B35);
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .promovare-header h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .promovare-header p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .package-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .package-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+        }
+
+        .package-card.recommended {
+            border-color: var(--primary-color);
+            border-width: 3px;
+        }
+
+        .package-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .package-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .package-price {
+            font-size: 36px;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .package-features {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .package-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .package-features li:last-child {
+            border-bottom: none;
+        }
+
+        .package-features li i {
+            color: var(--success-color);
+            margin-right: 10px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 30px 0;
+        }
+
+        .info-box h3 {
+            color: #1976D2;
+            margin-bottom: 10px;
+        }
+
+        .benefits-section {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: start;
+            gap: 15px;
+        }
+
+        .benefit-icon {
+            background: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Marc.ro</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li><a href="chat.html" id="chat-link"><i class="fas fa-comments"></i> Chat</a></li>
+                    <li><a href="notificari.html" id="notificari-link" class="notificari-link">
+                        <i class="fas fa-bell"></i> Notificări
+                        <span class="notificari-badge" id="notificari-badge" style="display: none;">0</span>
+                    </a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="promovare-page">
+        <div class="container promovare-container">
+            <div class="promovare-header">
+                <h1><i class="fas fa-rocket"></i> Promovează Anunțul Tău</h1>
+                <p>Fă-ți anunțul mai vizibil și primește mai multe oferte!</p>
+            </div>
+
+            <div class="info-box">
+                <h3><i class="fas fa-info-circle"></i> De ce să promovezi anunțul?</h3>
+                <p>Anunțurile promote ajung în primele poziții ale căutărilor, primesc un badge special și sunt afișate cu prioritate. Rezultate: mai multe vizualizări, mai multe mesaje, mai multe vânzări!</p>
+            </div>
+
+            <h2 style="margin: 30px 0 20px 0;">Pachete de Promovare</h2>
+            <div class="packages-grid" id="packages-container">
+                <!-- Pachetele vor fi încărcate dinamic -->
+                <div style="text-align: center; padding: 40px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
+                    <p>Se încarcă pachetele...</p>
+                </div>
+            </div>
+
+            <div class="benefits-section">
+                <h2>Beneficii Promovare</h2>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div>
+                            <h4>Vizualizări Mărite</h4>
+                            <p>Anunțul tău apare primul în rezultatele căutării</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div>
+                            <h4>Badge Premium</h4>
+                            <p>Badge special care atrage atenția cumpărătorilor</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div>
+                            <h4>Prioritate Afișare</h4>
+                            <p>Anunțul tău este afișat înaintea anunțurilor normale</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <h4>Statistici Detaliate</h4>
+                            <p>Vezi exact câte vizualizări și mesaje primești</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3><i class="fas fa-question-circle"></i> Cum funcționează?</h3>
+                <ol style="padding-left: 20px; line-height: 2;">
+                    <li>Alege pachetul de promovare potrivit pentru anunțul tău</li>
+                    <li>Completează plata (sau folosește credite disponibile)</li>
+                    <li>Anunțul tău va fi promovat automat pentru perioada selectată</li>
+                    <li>Primești notificări și statistici despre performanța anunțului</li>
+                </ol>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
+                </div>
+                <div class="footer-social">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
+    <script>
+        // Încarcă pachetele de promovare
+        async function loadPackages() {
+            try {
+                // Pentru moment, folosim pachete hardcodate (poți crea API pentru ele)
+                const packages = [
+                    {
+                        id: 1,
+                        nume: 'Promovare Standard',
+                        pret: 22.29,
+                        zile: 7,
+                        descriere: 'Perfect pentru anunțuri noi',
+                        recommended: false,
+                        features: [
+                            'Afișare în primele poziții',
+                            'Badge "Promovat"',
+                            '7 zile valabilitate',
+                            'Statistici de bază'
+                        ]
+                    },
+                    {
+                        id: 2,
+                        nume: 'Promovare Premium',
+                        pret: 45.99,
+                        zile: 14,
+                        descriere: 'Cel mai popular pachet',
+                        recommended: true,
+                        features: [
+                            'Afișare prioritară',
+                            'Badge "Premium"',
+                            '14 zile valabilitate',
+                            'Statistici avansate',
+                            'Suport prioritar'
+                        ]
+                    },
+                    {
+                        id: 3,
+                        nume: 'Promovare Business',
+                        pret: 89.99,
+                        zile: 30,
+                        descriere: 'Pentru profesioniști',
+                        recommended: false,
+                        features: [
+                            'Afișare maximă prioritate',
+                            'Badge "Business"',
+                            '30 zile valabilitate',
+                            'Statistici complete',
+                            'Suport dedicat',
+                            'Re-promovare automată'
+                        ]
+                    }
+                ];
+
+                displayPackages(packages);
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+        }
+
+        function displayPackages(packages) {
+            const container = document.getElementById('packages-container');
+            container.innerHTML = packages.map(pkg => `
+                <div class="package-card ${pkg.recommended ? 'recommended' : ''}">
+                    ${pkg.recommended ? '<div class="package-badge">RECOMANDAT</div>' : ''}
+                    <div class="package-name">${pkg.nume}</div>
+                    <div class="package-price">${pkg.pret.toFixed(2)} €</div>
+                    <p style="color: var(--text-light); margin-bottom: 20px;">${pkg.descriere}</p>
+                    <ul class="package-features">
+                        ${pkg.features.map(feature => `<li><i class="fas fa-check"></i> ${feature}</li>`).join('')}
+                    </ul>
+                    <button class="btn btn-primary" style="width: 100%; margin-top: 20px;" onclick="selectPackage(${pkg.id}, ${pkg.pret})">
+                        Alege Pachet
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        function selectPackage(packageId, pret) {
+            // Verifică dacă utilizatorul e autentificat
+            Auth.check().then(result => {
+                if (!result.autentificat) {
+                    if (confirm('Pentru a promova un anunț trebuie să fii autentificat. Vrei să te conectezi?')) {
+                        window.location.href = 'login.html';
+                    }
+                    return;
+                }
+
+                // Redirecționează către pagina de plată pentru pachetul selectat
+                window.location.href = `promovare-plata.html?package=${packageId}&price=${pret}`;
+            });
+        }
+
+        // Încarcă numărul de notificări
+        async function loadNotificationsCount() {
+            try {
+                const result = await API.get('notificari.php');
+                if (result.necitite > 0) {
+                    document.getElementById('notificari-badge').textContent = result.necitite;
+                    document.getElementById('notificari-badge').style.display = 'inline-block';
+                }
+            } catch (error) {
+                console.error('Eroare la încărcarea notificărilor:', error);
+            }
+        }
+
+        // Inițializare
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPackages();
+            loadNotificationsCount();
+        });
+    </script>
+</body>
+</html>
+
