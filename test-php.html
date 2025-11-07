@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐘 Test PHP Backend</title>
+    <style>
+        body { font-family: Arial; max-width: 800px; margin: 50px auto; padding: 20px; background: #f5f5f5; }
+        h1 { color: #FF6B35; text-align: center; }
+        .box { background: white; padding: 20px; margin: 20px 0; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        input, textarea, select { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; margin: 10px 0; background: #4CAF50; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; }
+        button:hover { background: #45a049; }
+        .btn-info { background: #2196F3; }
+        .btn-info:hover { background: #0b7dda; }
+        .btn-danger { background: #f44336; }
+        .btn-danger:hover { background: #da190b; }
+        #status { padding: 15px; margin-top: 20px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        #rezultat { background: #e3f2fd; padding: 15px; margin-top: 10px; border-radius: 5px; max-height: 400px; overflow-y: auto; white-space: pre-wrap; font-family: monospace; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>🐘 Test PHP Backend</h1>
+    
+    <div class="box">
+        <h2>1️⃣ Înregistrare Utilizator</h2>
+        <input type="text" id="reg_nume" placeholder="Nume complet" value="Test User">
+        <input type="email" id="reg_email" placeholder="Email" value="test@example.com">
+        <input type="password" id="reg_parola" placeholder="Parolă (min 6 caractere)" value="parola123">
+        <input type="text" id="reg_telefon" placeholder="Telefon" value="0722123456">
+        <button onclick="testRegister()">Înregistrează-te</button>
+    </div>
+
+    <div class="box">
+        <h2>2️⃣ Login</h2>
+        <input type="email" id="login_email" placeholder="Email" value="test@example.com">
+        <input type="password" id="login_parola" placeholder="Parolă" value="parola123">
+        <button onclick="testLogin()">Login</button>
+    </div>
+
+    <div class="box">
+        <h2>3️⃣ Verifică Sesiune</h2>
+        <button class="btn-info" onclick="testCheck()">Verifică dacă ești autentificat</button>
+    </div>
+
+    <div class="box">
+        <h2>4️⃣ Publică Anunț</h2>
+        <input type="text" id="anunt_titlu" placeholder="Titlu anunț" value="Vând apartament 3 camere">
+        <textarea id="anunt_desc" rows="4" placeholder="Descriere">Apartament spațios, 3 camere, în cartier central. Renovat recent.</textarea>
+        <select id="anunt_cat">
+            <option value="Imobiliare">Imobiliare</option>
+            <option value="Auto">Auto</option>
+            <option value="Electronice">Electronice</option>
+            <option value="Mobilier">Mobilier</option>
+        </select>
+        <input type="number" id="anunt_pret" placeholder="Preț" value="85000">
+        <input type="text" id="anunt_oras" placeholder="Oraș" value="București">
+        <button onclick="testCreateAd()">Publică Anunț</button>
+    </div>
+
+    <div class="box">
+        <h2>5️⃣ Vezi Toate Anunțurile</h2>
+        <button class="btn-info" onclick="testGetAds()">Încarcă Anunțuri</button>
+    </div>
+
+    <div class="box">
+        <h2>6️⃣ Logout</h2>
+        <button class="btn-danger" onclick="testLogout()">Logout</button>
+    </div>
+
+    <div id="status">Status: Neautentificat</div>
+    <div id="rezultat" style="display:none;"></div>
+
+    <!-- Include configurația API -->
+    <script src="js/config.js"></script>
+    
+    <script>
+        // API_URL vine din config.js (detectare automată LOCAL vs LIVE)
+        const API_URL = API_CONFIG.BASE_URL;
+
+        function afiseazaStatus(mesaj, tip) {
+            const status = document.getElementById('status');
+            status.className = tip;
+            status.textContent = mesaj;
+        }
+
+        function afiseazaRezultat(data) {
+            const rezultat = document.getElementById('rezultat');
+            rezultat.style.display = 'block';
+            rezultat.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function testRegister() {
+            const data = {
+                action: 'register',
+                nume: document.getElementById('reg_nume').value,
+                email: document.getElementById('reg_email').value,
+                parola: document.getElementById('reg_parola').value,
+                telefon: document.getElementById('reg_telefon').value
+            };
+
+            try {
+                const response = await fetch(API_URL + 'auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    afiseazaStatus('✅ ' + result.mesaj, 'success');
+                    afiseazaRezultat(result);
+                } else {
+                    afiseazaStatus('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                afiseazaStatus('❌ Eroare: ' + error.message, 'error');
+            }
+        }
+
+        async function testLogin() {
+            const data = {
+                action: 'login',
+                email: document.getElementById('login_email').value,
+                parola: document.getElementById('login_parola').value
+            };
+
+            try {
+                const response = await fetch(API_URL + 'auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    afiseazaStatus('✅ ' + result.mesaj + ' - ' + result.user.nume, 'success');
+                    afiseazaRezultat(result);
+                } else {
+                    afiseazaStatus('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                afiseazaStatus('❌ Eroare: ' + error.message, 'error');
+            }
+        }
+
+        async function testCheck() {
+            try {
+                const response = await fetch(API_URL + 'auth.php?action=check', {
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+                
+                if (result.autentificat) {
+                    afiseazaStatus('✅ Autentificat ca: ' + result.user.nume, 'success');
+                    afiseazaRezultat(result);
+                } else {
+                    afiseazaStatus('❌ Neautentificat', 'error');
+                }
+            } catch (error) {
+                afiseazaStatus('❌ Eroare: ' + error.message, 'error');
+            }
+        }
+
+        async function testCreateAd() {
+            const data = {
+                titlu: document.getElementById('anunt_titlu').value,
+                descriere: document.getElementById('anunt_desc').value,
+                categorie: document.getElementById('anunt_cat').value,
+                pret: parseFloat(document.getElementById('anunt_pret').value),
+                oras: document.getElementById('anunt_oras').value,
+                judet: 'București',
+                imagini: []
+            };
+
+            try {
+                const response = await fetch(API_URL + 'anunturi.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data),
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    afiseazaStatus('✅ ' + result.mesaj + ' (ID: ' + result.id + ')', 'success');
+                    afiseazaRezultat(result);
+                } else {
+                    afiseazaStatus('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                afiseazaStatus('❌ Eroare: ' + error.message, 'error');
+            }
+        }
+
+        async function testGetAds() {
+            try {
+                const response = await fetch(API_URL + 'anunturi.php');
+                const result = await response.json();
+                
+                if (response.ok) {
+                    afiseazaStatus('✅ Încărcat ' + result.anunturi.length + ' anunțuri', 'success');
+                    afiseazaRezultat(result);
+                } else {
+                    afiseazaStatus('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                afiseazaStatus('❌ Eroare: ' + error.message, 'error');
+            }
+        }
+
+        async function testLogout() {
+            try {
+                const response = await fetch(API_URL + 'auth.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'logout' }),
+                    credentials: 'include'
+                });
+
+                const result = await response.json();
+                
+                if (response.ok) {
+                    afiseazaStatus('✅ ' + result.mesaj, 'success');
+                    document.getElementById('rezultat').style.display = 'none';
+                } else {
+                    afiseazaStatus('❌ ' + result.error, 'error');
+                }
+            } catch (error) {
+                afiseazaStatus('❌ Eroare: ' + error.message, 'error');
+            }
+        }
+    </script>
+</body>
+</html>
+
