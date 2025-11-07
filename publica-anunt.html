@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publică Anunț - Anunțuri & Oferte</title>
+    <title>Publică Anunț - Marc.ro</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -178,20 +178,28 @@
             <nav class="navbar">
                 <div class="logo" onclick="window.location.href='index.html'">
                     <i class="fas fa-circle-notch"></i>
-                    <span>Anunțuri & Oferte</span>
+                    <span>Marc.ro</span>
                 </div>
                 <ul class="nav-menu">
                     <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
                     <li><a href="publica-anunt.html" class="active"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
                     <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
                     <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li><a href="chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+                    <li><a href="notificari.html" class="notificari-link">
+                        <i class="fas fa-bell"></i> Notificări
+                        <span class="notificari-badge" id="notificari-badge" style="display: none;">0</span>
+                    </a></li>
                     <li class="dropdown">
                         <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
                         <div class="dropdown-content">
                             <a href="contul-meu.html">Contul Meu</a>
                             <a href="anunturi-mele.html">Anunțurile Mele</a>
                             <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
                             <a href="setari.html">Setări</a>
+                            <a href="#" id="admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</a>
                             <a href="#" onclick="logout()">Deconectare</a>
                         </div>
                     </li>
@@ -320,7 +328,7 @@
                             <i class="fas fa-cloud-upload-alt"></i>
                             <h4>Încarcă fotografii</h4>
                             <p style="color: var(--text-light); margin-top: 10px;">
-                                Click pentru a adăuga până la 10 imagini<br>
+                                Click pentru a adăuga până la 6 imagini<br>
                                 <small>Formatul acceptat: JPG, PNG (max 5MB per imagine)</small>
                             </p>
                             <input type="file" id="imageInput" accept="image/*" multiple style="display: none;">
@@ -415,7 +423,7 @@
                     <button type="button" class="btn btn-outline" onclick="window.location.href='index.html'">
                         <i class="fas fa-times"></i> Anulează
                     </button>
-                    <button type="button" class="btn btn-outline">
+                    <button type="button" class="btn btn-outline" onclick="previewAd()">
                         <i class="fas fa-eye"></i> Previzualizează
                     </button>
                     <button type="submit" class="btn btn-primary btn-large">
@@ -437,7 +445,7 @@
                     <a href="despre.html">Despre noi</a>
                 </div>
                 <div class="footer-copyright">
-                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
                 </div>
                 <div class="footer-social">
                     <a href="#"><i class="fab fa-facebook"></i></a>
@@ -449,7 +457,9 @@
         </div>
     </footer>
 
+    <script src="js/config.js"></script>
     <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
     <script>
         // Character counters
         document.getElementById('title').addEventListener('input', function() {
@@ -460,40 +470,265 @@
             document.getElementById('descCounter').textContent = this.value.length;
         });
 
-        // Image upload preview
+        // Variabilă pentru a stoca imaginile selectate
+        let selectedImages = [];
+        let uploadedImageUrls = [];
+
+        // Actualizează preview-ul imaginilor și stochează referințele
         document.getElementById('imageInput').addEventListener('change', function(e) {
-            const files = e.target.files;
+            const files = Array.from(e.target.files);
             const previewContainer = document.getElementById('imagePreview');
             
-            for(let i = 0; i < files.length && i < 10; i++) {
-                const file = files[i];
+            // Limitează la maxim 6 imagini
+            if (files.length > 6) {
+                Utils.showNotification('Poți încărca maximum 6 imagini!', 'warning');
+                files.splice(6);
+                // Actualizează input-ul cu doar primele 6 fișiere
+                const dt = new DataTransfer();
+                files.forEach(file => dt.items.add(file));
+                this.files = dt.files;
+            }
+            
+            selectedImages = files; // Păstrează referințele la fișiere
+            previewContainer.innerHTML = '';
+            uploadedImageUrls = [];
+            
+            files.forEach((file, index) => {
                 const reader = new FileReader();
                 
                 reader.onload = function(e) {
                     const div = document.createElement('div');
                     div.className = 'image-preview-item';
+                    div.dataset.index = index;
                     div.innerHTML = `
-                        <img src="${e.target.result}" alt="Preview">
-                        <button type="button" class="remove-image-btn" onclick="this.parentElement.remove()">
+                        <img src="${e.target.result}" alt="Preview ${index + 1}">
+                        <button type="button" class="remove-image-btn" onclick="removeImage(${index})">
                             <i class="fas fa-times"></i>
                         </button>
                     `;
                     previewContainer.appendChild(div);
-                }
+                };
                 
                 reader.readAsDataURL(file);
-            }
+            });
         });
 
+        // Funcție pentru eliminarea unei imagini
+        function removeImage(index) {
+            selectedImages.splice(index, 1);
+            uploadedImageUrls.splice(index, 1);
+            
+            // Actualizează input-ul
+            const dt = new DataTransfer();
+            selectedImages.forEach(file => dt.items.add(file));
+            document.getElementById('imageInput').files = dt.files;
+            
+            // Re-renderează preview-ul
+            const previewContainer = document.getElementById('imagePreview');
+            previewContainer.innerHTML = '';
+            
+            selectedImages.forEach((file, idx) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'image-preview-item';
+                    div.dataset.index = idx;
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview ${idx + 1}">
+                        <button type="button" class="remove-image-btn" onclick="removeImage(${idx})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    `;
+                    previewContainer.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Funcție pentru previzualizare anunț
+        function previewAd() {
+            // Colectează datele din formular
+            const titlu = document.getElementById('title').value;
+            const descriere = document.getElementById('description').value;
+            const categorie = document.getElementById('category').value;
+            const pret = document.getElementById('price').value;
+            const moneda = document.getElementById('currency').value;
+            const oras = document.getElementById('city').value;
+            const judet = document.getElementById('county').value;
+            
+            // Validează datele
+            if (!titlu || !descriere || !categorie || !pret) {
+                Utils.showNotification('Completează toate câmpurile obligatorii pentru previzualizare!', 'warning');
+                return;
+            }
+            
+            // Obține preview-urile imaginilor (data URLs)
+            const imagePreviews = [];
+            const previewItems = document.querySelectorAll('#imagePreview .image-preview-item img');
+            previewItems.forEach(img => {
+                imagePreviews.push(img.src);
+            });
+            
+            // Creează un preview HTML
+            const previewHTML = `
+                <div style="max-width: 800px; margin: 0 auto; padding: 20px; background: white; border-radius: 10px;">
+                    <h2 style="margin-bottom: 20px;">Previzualizare Anunț</h2>
+                    ${imagePreviews.length > 0 ? `
+                        <img src="${imagePreviews[0]}" alt="${titlu}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 8px; margin-bottom: 20px;">
+                    ` : '<div style="width: 100%; height: 300px; background: #f0f0f0; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; color: #999;">Fără imagine</div>'}
+                    <h1 style="font-size: 28px; margin-bottom: 10px;">${titlu || 'Fără titlu'}</h1>
+                    <div style="font-size: 32px; color: var(--primary-color); font-weight: bold; margin-bottom: 20px;">
+                        ${Utils.formatPrice(parseFloat(pret || 0), moneda)}
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <strong>Categorie:</strong> ${categorie || 'N/A'}<br>
+                        <strong>Locație:</strong> ${oras || 'N/A'}${judet ? ', ' + judet : ''}
+                    </div>
+                    <div style="margin-bottom: 20px;">
+                        <h3>Descriere:</h3>
+                        <p style="white-space: pre-wrap;">${descriere || 'Fără descriere'}</p>
+                    </div>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn btn-outline" onclick="closePreview()" style="margin-right: 10px;">Închide</button>
+                        <button class="btn btn-primary" onclick="closePreviewAndPublish()">Publică Anunțul</button>
+                    </div>
+                </div>
+            `;
+            
+            // Creează un overlay pentru preview
+            const overlay = document.createElement('div');
+            overlay.id = 'preview-overlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 10000;
+                overflow-y: auto;
+                padding: 20px;
+            `;
+            overlay.innerHTML = previewHTML;
+            document.body.appendChild(overlay);
+        }
+
+        function closePreview() {
+            const overlay = document.getElementById('preview-overlay');
+            if (overlay) overlay.remove();
+        }
+
+        function closePreviewAndPublish() {
+            closePreview();
+            // Trimite formularul
+            document.getElementById('publishForm').dispatchEvent(new Event('submit'));
+        }
+
         // Form submission
-        function publishAd(e) {
+        async function publishAd(e) {
             e.preventDefault();
             
-            // Show success message
-            alert('Anunțul tău a fost publicat cu succes! \n\nVei fi redirecționat către pagina ta de anunțuri.');
+            // Verifică autentificarea
+            const authCheck = await Auth.check();
+            if (!authCheck.autentificat) {
+                alert('Trebuie să fii autentificat pentru a publica un anunț!');
+                window.location.href = 'login.html?return=publica-anunt.html';
+                return false;
+            }
             
-            // Redirect to my ads page
-            window.location.href = 'anunturi-mele.html';
+            // Colectează datele din formular
+            const titlu = document.getElementById('title').value.trim();
+            const descriere = document.getElementById('description').value.trim();
+            const categorie = document.getElementById('category').value;
+            const subcategorie = document.getElementById('subcategory').value;
+            const pret = parseFloat(document.getElementById('price').value);
+            const moneda = document.getElementById('currency').value;
+            const oras = document.getElementById('city').value.trim();
+            const judet = document.getElementById('county').value;
+            const condition = document.querySelector('input[name="condition"]:checked')?.value;
+            const negotiable = document.getElementById('negotiable').checked;
+            const contactName = document.getElementById('contactName').value.trim();
+            const contactPhone = document.getElementById('contactPhone').value.trim();
+            const contactEmail = document.getElementById('contactEmail').value.trim();
+            const hidePhone = document.getElementById('hidePhone').checked;
+            
+            // Validare
+            if (!titlu || !descriere || !categorie || !pret || !oras) {
+                Utils.showNotification('Completează toate câmpurile obligatorii!', 'error');
+                return false;
+            }
+            
+            try {
+                // Pas 1: Încarcă imaginile dacă există
+                let imaginiUrls = [];
+                if (selectedImages.length > 0) {
+                    Utils.showNotification('Se încarcă imaginile...', 'info');
+                    
+                    const formData = new FormData();
+                    selectedImages.forEach((file, index) => {
+                        formData.append('imagini[]', file);
+                    });
+                    
+                    const uploadResponse = await fetch('api/upload.php', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'include'
+                    });
+                    
+                    const uploadResult = await uploadResponse.json();
+                    
+                    if (uploadResult.success && uploadResult.imagini) {
+                        imaginiUrls = uploadResult.imagini;
+                    } else {
+                        Utils.showNotification('Eroare la încărcarea imaginilor: ' + (uploadResult.error || 'Eroare necunoscută'), 'error');
+                        return false;
+                    }
+                }
+                
+                // Pas 2: Salvează anunțul
+                const anuntData = {
+                    titlu: titlu,
+                    descriere: descriere,
+                    categorie: categorie,
+                    subcategorie: subcategorie || null,
+                    pret: pret,
+                    moneda: moneda,
+                    oras: oras,
+                    judet: judet || null,
+                    stare: condition || 'folosit',
+                    pret_negociabil: negotiable,
+                    contact_nume: contactName,
+                    contact_telefon: contactPhone,
+                    contact_email: contactEmail,
+                    ascunde_telefon: hidePhone,
+                    imagini: imaginiUrls
+                };
+                
+                const response = await fetch('api/anunturi.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(anuntData),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Utils.showNotification('Anunțul a fost salvat!', 'success');
+                    
+                    // Așteaptă puțin înainte de redirecționare
+                    setTimeout(() => {
+                        window.location.href = 'anunturi-mele.html?status=pending';
+                    }, 1500);
+                } else {
+                    Utils.showNotification('Eroare la publicarea anunțului: ' + (result.error || result.mesaj || 'Eroare necunoscută'), 'error');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la conectarea la server: ' + error.message, 'error');
+            }
             
             return false;
         }
