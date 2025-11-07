@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anunțurile Mele - Anunțuri & Oferte</title>
+    <title>Anunțurile Mele - Marc.ro</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -13,20 +13,28 @@
             <nav class="navbar">
                 <div class="logo" onclick="window.location.href='index.html'">
                     <i class="fas fa-circle-notch"></i>
-                    <span>Anunțuri & Oferte</span>
+                    <span>Marc.ro</span>
                 </div>
                 <ul class="nav-menu">
                     <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
                     <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
                     <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
                     <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li><a href="chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+                    <li><a href="notificari.html" class="notificari-link">
+                        <i class="fas fa-bell"></i> Notificări
+                        <span class="notificari-badge" id="notificari-badge" style="display: none;">0</span>
+                    </a></li>
                     <li class="dropdown">
                         <a href="#" class="user-menu active"><i class="fas fa-user-circle"></i></a>
                         <div class="dropdown-content">
                             <a href="contul-meu.html">Contul Meu</a>
                             <a href="anunturi-mele.html">Anunțurile Mele</a>
                             <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
                             <a href="setari.html">Setări</a>
+                            <a href="#" id="admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</a>
                             <a href="#" onclick="logout()">Deconectare</a>
                         </div>
                     </li>
@@ -43,90 +51,26 @@
             <h1 style="margin-bottom: 30px;"><i class="fas fa-list"></i> Anunțurile mele</h1>
             
             <div class="tabs">
-                <button class="tab-btn active" onclick="filterAds('active')">
-                    Active (5)
+                <button class="tab-btn active" onclick="filterAds('active')" id="tab-active">
+                    Active (<span id="count-active">0</span>)
                 </button>
-                <button class="tab-btn" onclick="filterAds('pending')">
-                    În așteptare (2)
+                <button class="tab-btn" onclick="filterAds('pending')" id="tab-pending">
+                    În așteptare (<span id="count-pending">0</span>)
                 </button>
-                <button class="tab-btn" onclick="filterAds('sold')">
-                    Vândute (8)
+                <button class="tab-btn" onclick="filterAds('sold')" id="tab-sold">
+                    Vândute (<span id="count-sold">0</span>)
                 </button>
-                <button class="tab-btn" onclick="filterAds('expired')">
-                    Expirate (3)
+                <button class="tab-btn" onclick="filterAds('expired')" id="tab-expired">
+                    Expirate (<span id="count-expired">0</span>)
                 </button>
             </div>
 
             <div class="form-card">
-                <div style="display: flex; flex-direction: column; gap: 20px;">
-                    <!-- Ad Item 1 -->
-                    <div style="display: flex; gap: 20px; padding: 20px; border: 1px solid var(--border-color); border-radius: 10px;">
-                        <img src="https://via.placeholder.com/150x120?text=Apartament" alt="Anunț" style="width: 150px; height: 120px; object-fit: cover; border-radius: 8px;">
-                        <div style="flex: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                                <div>
-                                    <h3 style="margin-bottom: 5px;">Apartament 3 camere, Bloc nou</h3>
-                                    <div style="font-size: 24px; color: var(--primary-color); font-weight: bold;">120.000 €</div>
-                                </div>
-                                <span style="background: var(--success-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">
-                                    Activ
-                                </span>
-                            </div>
-                            <div style="color: var(--text-light); margin-bottom: 10px;">
-                                <i class="fas fa-map-marker-alt"></i> București, Sector 2 •
-                                <i class="fas fa-eye"></i> 245 vizualizări •
-                                <i class="fas fa-clock"></i> Publicat azi
-                            </div>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">
-                                    <i class="fas fa-edit"></i> Editează
-                                </button>
-                                <button class="btn btn-success" style="padding: 8px 16px; font-size: 14px;">
-                                    <i class="fas fa-rocket"></i> Promovează
-                                </button>
-                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">
-                                    <i class="fas fa-chart-line"></i> Statistici
-                                </button>
-                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px; color: var(--danger-color);">
-                                    <i class="fas fa-trash"></i> Șterge
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Ad Item 2 -->
-                    <div style="display: flex; gap: 20px; padding: 20px; border: 1px solid var(--border-color); border-radius: 10px;">
-                        <img src="https://via.placeholder.com/150x120?text=BMW" alt="Anunț" style="width: 150px; height: 120px; object-fit: cover; border-radius: 8px;">
-                        <div style="flex: 1;">
-                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
-                                <div>
-                                    <h3 style="margin-bottom: 5px;">BMW X5, 2018, Full Options</h3>
-                                    <div style="font-size: 24px; color: var(--primary-color); font-weight: bold;">28.500 €</div>
-                                </div>
-                                <span style="background: var(--success-color); color: white; padding: 5px 15px; border-radius: 20px; font-size: 12px;">
-                                    Activ
-                                </span>
-                            </div>
-                            <div style="color: var(--text-light); margin-bottom: 10px;">
-                                <i class="fas fa-map-marker-alt"></i> Cluj-Napoca •
-                                <i class="fas fa-eye"></i> 189 vizualizări •
-                                <i class="fas fa-clock"></i> Acum 2 zile
-                            </div>
-                            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">
-                                    <i class="fas fa-edit"></i> Editează
-                                </button>
-                                <button class="btn btn-success" style="padding: 8px 16px; font-size: 14px;">
-                                    <i class="fas fa-rocket"></i> Promovează
-                                </button>
-                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;">
-                                    <i class="fas fa-chart-line"></i> Statistici
-                                </button>
-                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px; color: var(--danger-color);">
-                                    <i class="fas fa-trash"></i> Șterge
-                                </button>
-                            </div>
-                        </div>
+                <div id="anunturi-container" style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- Anunțurile vor fi încărcate dinamic aici -->
+                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 32px; margin-bottom: 10px;"></i>
+                        <p>Se încarcă anunțurile...</p>
                     </div>
                 </div>
             </div>
@@ -149,7 +93,7 @@
                     <a href="despre.html">Despre noi</a>
                 </div>
                 <div class="footer-copyright">
-                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
                 </div>
                 <div class="footer-social">
                     <a href="#"><i class="fab fa-facebook"></i></a>
@@ -161,13 +105,368 @@
         </div>
     </footer>
 
+    <script src="js/config.js"></script>
     <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
     <script>
-        function filterAds(status) {
+        const allowedStatuses = ['active', 'pending', 'sold', 'expired'];
+        const urlParams = new URLSearchParams(window.location.search);
+        const requestedStatus = (urlParams.get('status') || '').toLowerCase();
+        let currentStatus = allowedStatuses.includes(requestedStatus) ? requestedStatus : 'active';
+        let allAds = [];
+
+        function setActiveTab(status) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            console.log('Filtering ads by status:', status);
+            const tabBtn = document.getElementById('tab-' + status);
+            if (tabBtn) {
+                tabBtn.classList.add('active');
+            }
         }
+
+        // Încarcă numărul de anunțuri pentru fiecare status
+        async function loadCounts() {
+            try {
+                const response = await fetch('api/anunturi-mele.php?action=count', {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    console.error('Eroare HTTP:', response.status, response.statusText);
+                    return;
+                }
+                
+                const result = await response.json();
+                
+                console.log('Numărări primite:', result); // Debug
+                
+                // Actualizează numerele în tab-uri
+                const countActive = document.getElementById('count-active');
+                const countPending = document.getElementById('count-pending');
+                const countSold = document.getElementById('count-sold');
+                const countExpired = document.getElementById('count-expired');
+                
+                if (countActive) countActive.textContent = result.active || 0;
+                if (countPending) countPending.textContent = result.pending || 0;
+                if (countSold) countSold.textContent = result.sold || 0;
+                if (countExpired) countExpired.textContent = result.expired || 0;
+            } catch (error) {
+                console.error('Eroare la încărcarea numărărilor:', error);
+            }
+        }
+
+        // Încarcă anunțurile pentru un status specific
+        async function loadAds(status = null) {
+            try {
+                const url = status 
+                    ? 'api/anunturi-mele.php?status=' + status
+                    : 'api/anunturi-mele.php';
+                    
+                const response = await fetch(url, {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                
+                if (response.ok) {
+                    allAds = result.anunturi || [];
+                    displayAds(allAds);
+                } else {
+                    showError('Eroare la încărcarea anunțurilor: ' + (result.error || 'Eroare necunoscută'));
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                showError('Eroare la conectarea la server');
+            }
+        }
+
+        // Calculează zilele rămase pentru un anunț
+        function calculateDaysRemaining(dataCreare) {
+            const dataCreareObj = new Date(dataCreare);
+            const acum = new Date();
+            const diferentaMs = acum - dataCreareObj;
+            const diferentaZile = Math.floor(diferentaMs / (1000 * 60 * 60 * 24));
+            const zileRamase = Math.max(0, 30 - diferentaZile);
+            return { zileRamase, expirat: diferentaZile >= 30 };
+        }
+
+        // Afișează anunțurile
+        function displayAds(ads) {
+            const container = document.getElementById('anunturi-container');
+            
+            if (ads.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                        <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                        <p style="font-size: 18px;">Nu ai anunțuri în această categorie.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = ads.map(ad => {
+                const statusColors = {
+                    'activ': { bg: '#4CAF50', text: 'Activ' },
+                    'inactiv': { bg: '#FF9800', text: 'În așteptare' },
+                    'vandut': { bg: '#2196F3', text: 'Vândut' },
+                    'sters': { bg: '#F44336', text: 'Șters' }
+                };
+                
+                const status = statusColors[ad.status] || statusColors['activ'];
+                const imgUrl = ad.imagini && ad.imagini.length > 0 
+                    ? ad.imagini[0] 
+                    : 'https://via.placeholder.com/150x120?text=Anunț';
+                
+                const pretFormat = Utils.formatPrice(parseFloat(ad.pret || 0), ad.moneda || 'RON');
+                const dataFormat = Utils.formatRelativeDate(ad.data_creare);
+                const { zileRamase, expirat } = calculateDaysRemaining(ad.data_creare);
+                
+                // Formatează perioada validității
+                const dataCreareObj = new Date(ad.data_creare);
+                const dataExpirareObj = new Date(dataCreareObj);
+                dataExpirareObj.setDate(dataExpirareObj.getDate() + 30);
+                const formatDate = (date) => {
+                    return date.toLocaleDateString('ro-RO', { day: '2-digit', month: 'short', year: 'numeric' });
+                };
+                const formatTime = (date) => {
+                    return date.toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' });
+                };
+                const perioadaValiditate = `${formatDate(dataCreareObj)} - ${formatDate(dataExpirareObj)}, ${formatTime(dataCreareObj)}`;
+                
+                return `
+                    <div style="display: flex; gap: 20px; padding: 20px; border: 1px solid var(--border-color); border-radius: 10px; background: white; margin-bottom: 15px;">
+                        <div style="position: relative;">
+                            <input type="checkbox" class="ad-select-checkbox" value="${ad.id}" style="position: absolute; top: 10px; left: 10px; z-index: 10; width: 20px; height: 20px;">
+                            <img src="${imgUrl}" alt="${ad.titlu}" style="width: 150px; height: 120px; object-fit: cover; border-radius: 8px; cursor: pointer;" onclick="window.location.href='anunt-detalii.html?id=${ad.id}'">
+                            <div style="margin-top: 5px; font-size: 11px; color: var(--text-light); text-align: center;">
+                                ID: ${ad.id}
+                            </div>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 10px;">
+                                <div style="flex: 1;">
+                                    <h3 style="margin-bottom: 5px; font-size: 16px; cursor: pointer;" onclick="window.location.href='anunt-detalii.html?id=${ad.id}'">
+                                        ${ad.titlu}
+                                    </h3>
+                                    <div style="font-size: 20px; color: var(--primary-color); font-weight: bold; margin-bottom: 8px;">
+                                        ${pretFormat}
+                                    </div>
+                                    <div style="color: var(--text-light); font-size: 13px; margin-bottom: 8px;">
+                                        <span>${ad.categorie || 'N/A'}</span>
+                                        ${ad.subcategorie ? ` • ${ad.subcategorie}` : ''}
+                                        ${ad.categorie === 'imobiliare' ? ' • 1 camera' : ''}
+                                    </div>
+                                    <div style="color: var(--text-light); font-size: 13px; margin-bottom: 8px;">
+                                        <i class="fas fa-map-marker-alt"></i> ${ad.oras || 'N/A'}${ad.judet ? ', ' + ad.judet : ''}
+                                    </div>
+                                    <div style="color: var(--text-light); font-size: 12px; margin-bottom: 8px;">
+                                        <i class="fas fa-calendar"></i> ${perioadaValiditate}
+                                        ${expirat ? '<span style="color: #F44336; margin-left: 10px;">⚠ Expirat</span>' : zileRamase > 0 ? `<span style="color: #4CAF50; margin-left: 10px;">(${zileRamase} zile rămase)</span>` : ''}
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 15px; margin-top: 10px;">
+                                        <div style="display: flex; align-items: center; gap: 5px; color: var(--text-light); font-size: 13px;">
+                                            <i class="fas fa-eye"></i> <span>${ad.vizualizari || 0}</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 5px; color: var(--text-light); font-size: 13px;">
+                                            <i class="fas fa-heart"></i> <span>0</span>
+                                        </div>
+                                        <div style="display: flex; align-items: center; gap: 5px; color: var(--text-light); font-size: 13px;">
+                                            <i class="fas fa-phone"></i> <span>0</span>
+                                        </div>
+                                        <button class="btn btn-outline" style="padding: 4px 12px; font-size: 12px; margin-left: 10px;" onclick="viewStats(${ad.id})">
+                                            <i class="fas fa-chart-line"></i> Vezi statisticile
+                                        </button>
+                                        <div style="display: flex; align-items: center; gap: 5px; color: var(--text-light); font-size: 13px; margin-left: 10px;">
+                                            <i class="fas fa-comments"></i> <span>0</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <span style="background: ${status.bg}; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; display: inline-block; margin-bottom: 10px;">
+                                        ${status.text}
+                                    </span>
+                                    <div style="margin-top: 10px;">
+                                        <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-light); cursor: pointer;">
+                                            <input type="checkbox" ${ad.auto_renew || false ? 'checked' : ''} onchange="toggleAutoRenew(${ad.id}, this.checked)" style="width: 18px; height: 18px;">
+                                            <i class="fas fa-bolt"></i> Autoprelungire
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color);">
+                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px;" onclick="reactualizeazaAd(${ad.id})">
+                                    <i class="fas fa-sync-alt"></i> Reactualizează
+                                </button>
+                                <button class="btn btn-success" style="padding: 8px 16px; font-size: 14px;" onclick="promoteAd(${ad.id})">
+                                    <i class="fas fa-bookmark"></i> Promovează de la 22,29 €
+                                </button>
+                                <button class="btn btn-outline" style="padding: 8px 16px; font-size: 14px; color: var(--danger-color);" onclick="deactivateAdUser(${ad.id})">
+                                    <i class="fas fa-pause"></i> Dezactivează
+                                </button>
+                                <button class="btn btn-primary" style="padding: 8px 16px; font-size: 14px;" onclick="editAd(${ad.id})">
+                                    <i class="fas fa-edit"></i> Editează
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Filtrează anunțurile după status
+        async function filterAds(status, options = {}) {
+            const { skipCounts = false } = options;
+            currentStatus = status;
+            
+            // Actualizează tab-urile active
+            setActiveTab(status);
+            
+            // Încarcă anunțurile pentru status-ul selectat
+            await loadAds(status);
+            
+            // Reîncarcă numărările pentru a actualiza counter-ele
+            if (!skipCounts) {
+                await loadCounts();
+            }
+        }
+
+        // Funcții pentru acțiuni
+        function editAd(id) {
+            window.location.href = 'publica-anunt.html?edit=' + id;
+        }
+
+        async function promoteAd(id) {
+            // TODO: Implementează funcționalitatea de promovare
+            window.location.href = 'promovare.html?anunt_id=' + id;
+        }
+
+        function viewStats(id) {
+            // TODO: Implementează pagina de statistici
+            alert('Statisticile pentru anunțul #' + id + ' vor fi disponibile în curând!');
+        }
+
+        async function reactualizeazaAd(id) {
+            if (!confirm('Ești sigur că vrei să reactualizezi acest anunț? Anunțul va reapărea în topul listei.')) {
+                return;
+            }
+            
+            try {
+                // Reactualizează data creării (resetare perioadă validitate)
+                const response = await fetch('api/anunturi.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        reactualizare: true
+                    }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Utils.showNotification('Anunț reactualizat cu succes!', 'success');
+                    await loadAds(currentStatus);
+                    await loadCounts();
+                } else {
+                    Utils.showNotification('Eroare la reactualizare: ' + (result.error || 'Eroare necunoscută'), 'error');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la conectarea la server', 'error');
+            }
+        }
+
+        async function deactivateAdUser(id) {
+            if (!confirm('Ești sigur că vrei să dezactivezi acest anunț?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch('api/anunturi.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: id,
+                        status: 'inactiv'
+                    }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Utils.showNotification('Anunț dezactivat!', 'success');
+                    await loadAds(currentStatus);
+                    await loadCounts();
+                } else {
+                    Utils.showNotification('Eroare la dezactivare: ' + (result.error || 'Eroare necunoscută'), 'error');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la conectarea la server', 'error');
+            }
+        }
+
+        async function toggleAutoRenew(adId, enabled) {
+            try {
+                // TODO: Implementează funcționalitatea de auto-renew în baza de date
+                // Pentru moment, doar afișăm un mesaj
+                if (enabled) {
+                    Utils.showNotification('Autoprelungire activată!', 'success');
+                } else {
+                    Utils.showNotification('Autoprelungire dezactivată!', 'info');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la actualizarea autoprelungirii', 'error');
+            }
+        }
+
+        async function deleteAd(id) {
+            if (!confirm('Ești sigur că vrei să ștergi acest anunț?')) {
+                return;
+            }
+            
+            try {
+                const result = await Anunturi.delete(id);
+                if (result.success) {
+                    await loadAds(currentStatus);
+                    await loadCounts();
+                    Utils.showNotification('Anunț șters cu succes!', 'success');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                alert('Eroare la ștergerea anunțului!');
+            }
+        }
+
+        function showError(message) {
+            const container = document.getElementById('anunturi-container');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: var(--danger-color);">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 18px;">${message}</p>
+                </div>
+            `;
+        }
+
+        // Inițializare când se încarcă pagina
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Verifică dacă utilizatorul e autentificat
+            const authCheck = await Auth.check();
+            if (!authCheck.autentificat) {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            // Încarcă numărările și anunțurile
+            await loadCounts();
+            setActiveTab(currentStatus);
+            await loadAds(currentStatus);
+        });
     </script>
 </body>
 </html>
