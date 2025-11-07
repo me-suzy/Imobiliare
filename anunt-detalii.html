@@ -238,20 +238,28 @@
             <nav class="navbar">
                 <div class="logo" onclick="window.location.href='index.html'">
                     <i class="fas fa-circle-notch"></i>
-                    <span>Anunțuri & Oferte</span>
+                    <span>Marc.ro</span>
                 </div>
                 <ul class="nav-menu">
                     <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
                     <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
                     <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
                     <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li><a href="chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+                    <li><a href="notificari.html" class="notificari-link">
+                        <i class="fas fa-bell"></i> Notificări
+                        <span class="notificari-badge" id="notificari-badge" style="display: none;">0</span>
+                    </a></li>
                     <li class="dropdown">
                         <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
                         <div class="dropdown-content">
                             <a href="contul-meu.html">Contul Meu</a>
                             <a href="anunturi-mele.html">Anunțurile Mele</a>
                             <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
                             <a href="setari.html">Setări</a>
+                            <a href="#" id="admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</a>
                             <a href="#" onclick="logout()">Deconectare</a>
                         </div>
                     </li>
@@ -510,7 +518,7 @@
                     <a href="despre.html">Despre noi</a>
                 </div>
                 <div class="footer-copyright">
-                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
                 </div>
                 <div class="footer-social">
                     <a href="#"><i class="fab fa-facebook"></i></a>
@@ -522,19 +530,381 @@
         </div>
     </footer>
 
+    <script src="js/config.js"></script>
     <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
     <script>
-        // Gallery functionality
-        document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
-            thumb.addEventListener('click', function() {
-                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
+        let currentAd = null;
+        let currentAdId = null;
+
+        // Preia ID-ul anunțului din URL
+        function getAdIdFromURL() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id') || null;
+        }
+
+        // Verifică dacă utilizatorul este admin
+        let isAdmin = false;
+        
+        async function checkAdmin() {
+            try {
+                const result = await Auth.check();
+                isAdmin = result.user && result.user.tip_cont === 'admin';
+                return isAdmin;
+            } catch (error) {
+                console.error('Eroare la verificare admin:', error);
+                return false;
+            }
+        }
+
+        // Încarcă detaliile anunțului
+        async function loadAdDetails() {
+            currentAdId = getAdIdFromURL();
+            
+            if (!currentAdId) {
+                showError('ID anunț invalid');
+                return;
+            }
+
+            // Verifică dacă e admin
+            await checkAdmin();
+
+            try {
+                // Folosește fetch direct pentru a putea accesa și anunțurile inactive (dacă e admin)
+                const url = `api/anunturi.php?id=${currentAdId}`;
+                const response = await fetch(url, {
+                    credentials: 'include'
+                });
+                
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        showError('Anunț negăsit');
+                    } else {
+                        const errorData = await response.json();
+                        showError(errorData.error || 'Eroare la încărcarea anunțului');
+                    }
+                    return;
+                }
+                
+                const result = await response.json();
+                
+                if (result.anunt) {
+                    currentAd = result.anunt;
+                    displayAdDetails(result.anunt);
+                    loadSimilarAds(result.anunt.categorie, result.anunt.id);
+                } else {
+                    showError('Anunț negăsit');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                showError('Eroare la încărcarea anunțului: ' + error.message);
+            }
+        }
+
+        // Afișează detaliile anunțului
+        function displayAdDetails(ad) {
+            // Actualizează titlul paginii
+            document.title = ad.titlu + ' - Marc.ro';
+
+            // Titlu
+            document.querySelector('.ad-info-title').textContent = ad.titlu;
+            
+            // Preț
+            const price = Utils.formatPrice(parseFloat(ad.pret || 0), ad.moneda || 'RON');
+            document.querySelector('.ad-info-price').textContent = price;
+
+            // Meta informații
+            const metaHTML = `
+                <div class="meta-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${ad.oras || 'N/A'}${ad.judet ? ', ' + ad.judet : ''}</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-eye"></i>
+                    <span>${ad.vizualizari || 0} vizualizări</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-clock"></i>
+                    <span>${Utils.formatRelativeDate(ad.data_creare)}</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fas fa-tag"></i>
+                    <span>${ad.categorie}</span>
+                </div>
+            `;
+            document.querySelector('.ad-info-meta').innerHTML = metaHTML;
+
+            // Descriere
+            document.querySelector('.ad-description').innerHTML = `<p>${ad.descriere.replace(/\n/g, '<br>')}</p>`;
+
+            // Butoane acțiuni admin (dacă e admin)
+            if (isAdmin) {
+                const sellerCard = document.querySelector('.seller-card');
+                if (sellerCard) {
+                    const adminActions = document.createElement('div');
+                    adminActions.className = 'admin-actions';
+                    adminActions.style.cssText = `
+                        margin-top: 20px;
+                        padding-top: 20px;
+                        border-top: 2px solid #e0e0e0;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 10px;
+                    `;
+                    
+                    const statusBadge = ad.status === 'activ' 
+                        ? '<span style="background: #4CAF50; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px;">✓ Activ</span>'
+                        : ad.status === 'inactiv'
+                        ? '<span style="background: #FF9800; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px;">⏳ În așteptare</span>'
+                        : '<span style="background: #999; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px;">' + ad.status + '</span>';
+                    
+                    adminActions.innerHTML = `
+                        <div style="margin-bottom: 10px;">
+                            <strong>Status:</strong> ${statusBadge}
+                        </div>
+                        ${ad.status === 'inactiv' ? `
+                            <button class="btn btn-success" onclick="approveAdFromDetails(${ad.id})" style="width: 100%;">
+                                <i class="fas fa-check"></i> Aprobă Anunțul
+                            </button>
+                            <button class="btn btn-danger" onclick="rejectAdFromDetails(${ad.id})" style="width: 100%;">
+                                <i class="fas fa-times"></i> Respinge Anunțul
+                            </button>
+                        ` : ad.status === 'activ' ? `
+                            <button class="btn btn-warning" onclick="deactivateAdFromDetails(${ad.id})" style="width: 100%;">
+                                <i class="fas fa-pause"></i> Dezactivează Anunțul
+                            </button>
+                        ` : ''}
+                        <button class="btn btn-primary" onclick="editAdFromDetails(${ad.id})" style="width: 100%;">
+                            <i class="fas fa-edit"></i> Editează Anunțul
+                        </button>
+                        <button class="btn btn-danger" onclick="deleteAdFromDetails(${ad.id})" style="width: 100%;">
+                            <i class="fas fa-trash"></i> Șterge Anunțul
+                        </button>
+                    `;
+                    sellerCard.appendChild(adminActions);
+                }
+            }
+
+            // Imagini
+            const images = ad.imagini && ad.imagini.length > 0 ? ad.imagini : [];
+            
+            if (images.length > 0) {
+                // Imaginea principală
+                document.querySelector('.main-image img').src = images[0];
+                document.querySelector('.main-image img').alt = ad.titlu;
+                
+                // Thumbnails
+                const galleryHTML = images.map((img, index) => `
+                    <div class="thumbnail ${index === 0 ? 'active' : ''}" onclick="changeMainImage('${img}')">
+                        <img src="${img}" alt="Imagine ${index + 1}">
+                    </div>
+                `).join('');
+                
+                document.querySelector('.thumbnail-gallery').innerHTML = galleryHTML;
+            } else {
+                // Placeholder dacă nu sunt imagini
+                document.querySelector('.main-image img').src = 'https://via.placeholder.com/800x500?text=Nu+sunt+imagini';
+                document.querySelector('.thumbnail-gallery').innerHTML = '';
+            }
+
+            // Informații vânzător
+            if (ad.nume_utilizator) {
+                const initials = ad.nume_utilizator.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                document.querySelector('.seller-avatar').textContent = initials;
+                document.querySelector('.seller-details h4').textContent = ad.nume_utilizator;
+                
+                if (ad.telefon_utilizator) {
+                    document.querySelector('#phoneNumber').innerHTML = `<i class="fas fa-phone"></i> ${ad.telefon_utilizator}`;
+                }
+            }
+        }
+
+        // Schimbă imaginea principală
+        function changeMainImage(imgSrc) {
+            document.querySelector('.main-image img').src = imgSrc;
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            event.target.closest('.thumbnail').classList.add('active');
+        }
+
+        // Încarcă anunțuri similare
+        async function loadSimilarAds(categorie, excludeId) {
+            try {
+                const result = await Anunturi.getAll({
+                    categorie: categorie,
+                    limit: 3
+                });
+                
+                const similarAds = (result.anunturi || []).filter(ad => ad.id != excludeId).slice(0, 3);
+                
+                if (similarAds.length > 0) {
+                    const grid = document.querySelector('.ads-grid');
+                    grid.innerHTML = similarAds.map(ad => {
+                        const imgUrl = ad.imagini && ad.imagini.length > 0 
+                            ? ad.imagini[0] 
+                            : 'https://via.placeholder.com/300x200?text=Anunț';
+                        
+                        return `
+                            <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=${ad.id}'">
+                                <div class="ad-image">
+                                    <img src="${imgUrl}" alt="${ad.titlu}">
+                                    <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)"><i class="far fa-heart"></i></button>
+                                </div>
+                                <div class="ad-content">
+                                    <div class="ad-price">${Utils.formatPrice(parseFloat(ad.pret || 0), ad.moneda || 'RON')}</div>
+                                    <h3 class="ad-title">${ad.titlu}</h3>
+                                    <div class="ad-location"><i class="fas fa-map-marker-alt"></i> ${ad.oras || 'N/A'}</div>
+                                    <div class="ad-date">${Utils.formatRelativeDate(ad.data_creare)}</div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                } else {
+                    document.querySelector('.ads-grid').innerHTML = '<p style="text-align: center; padding: 20px;">Nu sunt anunțuri similare disponibile.</p>';
+                }
+            } catch (error) {
+                console.error('Eroare la încărcarea anunțurilor similare:', error);
+            }
+        }
 
         function showPhone() {
             document.getElementById('phoneNumber').style.display = 'block';
         }
+
+        function showError(message) {
+            document.querySelector('.ad-details-container').innerHTML = `
+                <div style="text-align: center; padding: 60px; color: var(--danger-color);">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 64px; margin-bottom: 20px;"></i>
+                    <h2>${message}</h2>
+                    <p style="margin-top: 20px;"><a href="index.html">Înapoi la pagina principală</a></p>
+                </div>
+            `;
+        }
+
+        // Inițializare
+        // Funcții pentru acțiuni admin
+        async function approveAdFromDetails(adId) {
+            if (!confirm('Ești sigur că vrei să aprobi acest anunț?')) return;
+            
+            try {
+                const response = await fetch('api/admin.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ anunt_id: adId, status: 'activ' }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Utils.showNotification('Anunț aprobat cu succes!', 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    Utils.showNotification('Eroare la aprobare: ' + (result.error || 'Eroare necunoscută'), 'error');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la conectarea la server', 'error');
+            }
+        }
+
+        async function rejectAdFromDetails(adId) {
+            if (!confirm('Ești sigur că vrei să respingi acest anunț? Anunțul va fi șters.')) return;
+            
+            try {
+                const response = await fetch('api/admin.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ anunt_id: adId, status: 'sters' }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Utils.showNotification('Anunț respins și șters!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1000);
+                } else {
+                    Utils.showNotification('Eroare la respingere: ' + (result.error || 'Eroare necunoscută'), 'error');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la conectarea la server', 'error');
+            }
+        }
+
+        async function deactivateAdFromDetails(adId) {
+            if (!confirm('Ești sigur că vrei să dezactivezi acest anunț?')) return;
+            
+            try {
+                const response = await fetch('api/admin.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ anunt_id: adId, status: 'inactiv' }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Utils.showNotification('Anunț dezactivat!', 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                } else {
+                    Utils.showNotification('Eroare la dezactivare: ' + (result.error || 'Eroare necunoscută'), 'error');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la conectarea la server', 'error');
+            }
+        }
+
+        function editAdFromDetails(adId) {
+            window.location.href = 'publica-anunt.html?edit=' + adId;
+        }
+
+        async function deleteAdFromDetails(adId) {
+            if (!confirm('Ești sigur că vrei să ștergi acest anunț? Această acțiune este ireversibilă!')) return;
+            
+            try {
+                const response = await fetch('api/admin.php', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ anunt_id: adId, status: 'sters' }),
+                    credentials: 'include'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Utils.showNotification('Anunț șters!', 'success');
+                    setTimeout(() => {
+                        window.location.href = 'admin.html';
+                    }, 1000);
+                } else {
+                    Utils.showNotification('Eroare la ștergere: ' + (result.error || 'Eroare necunoscută'), 'error');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la conectarea la server', 'error');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAdDetails();
+        });
     </script>
 </body>
 </html>
