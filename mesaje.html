@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mesaje - Anunțuri & Oferte</title>
+    <title>Mesaje - Marc.ro</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -11,7 +11,8 @@
             display: grid;
             grid-template-columns: 350px 1fr;
             gap: 20px;
-            height: calc(100vh - 300px);
+            height: calc(100vh - 350px);
+            min-height: 500px;
         }
         .conversations-list {
             background: white;
@@ -47,19 +48,32 @@
             margin-bottom: 15px;
             display: flex;
             gap: 10px;
-        }
-        .message.sent {
-            justify-content: flex-end;
+            justify-content: flex-start;
         }
         .message-bubble {
             max-width: 70%;
+            min-width: 120px;
             padding: 12px 16px;
             border-radius: 15px;
             background: var(--light-bg);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .message.sent .message-bubble {
             background: var(--primary-color);
             color: white;
+        }
+        .message-text {
+            display: inline;
+            margin: 0;
+            line-height: 1.4;
+        }
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-left: 8px;
+            display: inline-block;
+            white-space: nowrap;
         }
         .chat-input {
             padding: 20px;
@@ -83,20 +97,28 @@
             <nav class="navbar">
                 <div class="logo" onclick="window.location.href='index.html'">
                     <i class="fas fa-circle-notch"></i>
-                    <span>Anunțuri & Oferte</span>
+                    <span>Marc.ro</span>
                 </div>
                 <ul class="nav-menu">
                     <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
                     <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
                     <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
                     <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li><a href="chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+                    <li><a href="notificari.html" class="notificari-link">
+                        <i class="fas fa-bell"></i> Notificări
+                        <span class="notificari-badge" id="notificari-badge" style="display: none;">0</span>
+                    </a></li>
                     <li class="dropdown">
                         <a href="#" class="user-menu active"><i class="fas fa-user-circle"></i></a>
                         <div class="dropdown-content">
                             <a href="contul-meu.html">Contul Meu</a>
                             <a href="anunturi-mele.html">Anunțurile Mele</a>
                             <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
                             <a href="setari.html">Setări</a>
+                            <a href="#" id="admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</a>
                             <a href="#" onclick="logout()">Deconectare</a>
                         </div>
                     </li>
@@ -108,88 +130,35 @@
         </div>
     </header>
 
-    <section class="account-page">
+    <section class="account-page" style="padding-bottom: 100px;">
         <div class="container">
             <h1 style="margin-bottom: 30px;"><i class="fas fa-envelope"></i> Mesaje</h1>
 
             <div class="messages-container">
-                <div class="conversations-list">
-                    <div class="conversation-item active">
-                        <div style="display: flex; gap: 10px;">
-                            <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                                MP
-                            </div>
-                            <div style="flex: 1;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <strong>Maria Popescu</strong>
-                                    <span style="font-size: 12px; color: var(--text-light);">10:30</span>
-                                </div>
-                                <div style="font-size: 14px; color: var(--text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                    Apartamentul este încă disponibil?
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="conversation-item">
-                        <div style="display: flex; gap: 10px;">
-                            <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--success-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                                AI
-                            </div>
-                            <div style="flex: 1;">
-                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
-                                    <strong>Andrei Ion</strong>
-                                    <span style="font-size: 12px; color: var(--text-light);">Ieri</span>
-                                </div>
-                                <div style="font-size: 14px; color: var(--text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                    Mulțumesc pentru informații!
-                                </div>
-                            </div>
-                        </div>
+                <div class="conversations-list" id="conversations-list">
+                    <div style="padding: 20px; text-align: center; color: var(--text-light);">
+                        <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <p>Se încarcă conversațiile...</p>
                     </div>
                 </div>
 
                 <div class="chat-window">
-                    <div class="chat-header">
-                        <div style="display: flex; align-items: center; gap: 15px;">
-                            <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
-                                MP
-                            </div>
-                            <div>
-                                <h3 style="margin-bottom: 5px;">Maria Popescu</h3>
-                                <div style="font-size: 14px; color: var(--text-light);">
-                                    Despre: Apartament 3 camere, Bloc nou
-                                </div>
-                            </div>
+                    <div class="chat-header" id="chat-header">
+                        <div style="text-align: center; color: var(--text-light);">
+                            Selectează o conversație din stânga pentru a vedea mesajele.
                         </div>
                     </div>
 
-                    <div class="chat-messages">
-                        <div class="message">
-                            <div class="message-bubble">
-                                <div>Bună ziua! Apartamentul este încă disponibil?</div>
-                                <div style="font-size: 11px; opacity: 0.7; margin-top: 5px;">10:25</div>
-                            </div>
-                        </div>
-
-                        <div class="message sent">
-                            <div class="message-bubble">
-                                <div>Bună ziua! Da, apartamentul este disponibil. Vă pot ajuta cu mai multe informații?</div>
-                                <div style="font-size: 11px; opacity: 0.9; margin-top: 5px;">10:27</div>
-                            </div>
-                        </div>
-
-                        <div class="message">
-                            <div class="message-bubble">
-                                <div>Aș dori să programez o vizionare. Când ar fi posibil?</div>
-                                <div style="font-size: 11px; opacity: 0.7; margin-top: 5px;">10:30</div>
-                            </div>
+                    <div class="chat-messages" id="chat-messages">
+                        <div style="display: flex; align-items: center; justify-content: center; color: var(--text-light); flex-direction: column; gap: 10px; height: 100%;">
+                            <i class="fas fa-comments" style="font-size: 36px; opacity: 0.3;"></i>
+                            <p style="margin: 0;">Nu ai selectat încă o conversație.</p>
                         </div>
                     </div>
 
                     <div class="chat-input">
-                        <input type="text" class="form-control" placeholder="Scrie un mesaj..." style="flex: 1;">
-                        <button class="btn btn-primary">
+                        <input type="text" class="form-control" id="message-input" placeholder="Scrie un mesaj..." style="flex: 1;" disabled>
+                        <button class="btn btn-primary" id="send-message-btn" disabled>
                             <i class="fas fa-paper-plane"></i> Trimite
                         </button>
                     </div>
@@ -208,7 +177,7 @@
                     <a href="despre.html">Despre noi</a>
                 </div>
                 <div class="footer-copyright">
-                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
                 </div>
                 <div class="footer-social">
                     <a href="#"><i class="fab fa-facebook"></i></a>
@@ -220,7 +189,359 @@
         </div>
     </footer>
 
+    <script src="js/config.js"></script>
     <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
+    <script>
+        let conversations = [];
+        let currentConversationId = null;
+        let pollingInterval = null;
+        let loggedInUser = null;
+        let pendingPartnerId = null;
+        let pendingAdId = null;
+        let pendingSubject = null;
+
+        function conversationInitials(name) {
+            if (!name) return '??';
+            const parts = name.trim().split(/\s+/);
+            if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+            return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        }
+
+        function formatRelative(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) return '';
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMinutes = Math.floor(diffMs / 60000);
+            if (diffMinutes < 1) return 'acum';
+            if (diffMinutes < 60) return diffMinutes + ' min';
+            const diffHours = Math.floor(diffMinutes / 60);
+            if (diffHours < 24) return diffHours + ' h';
+            return date.toLocaleDateString('ro-RO', { day: 'numeric', month: 'short' });
+        }
+
+        async function loadConversations(selectId = null) {
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}mesaje.php?action=conversatii`, {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                conversations = result.conversatii || [];
+                renderConversations();
+
+                if (selectId) {
+                    selectConversation(selectId);
+                } else if (currentConversationId) {
+                    const exists = conversations.some(c => c.id === currentConversationId);
+                    if (exists) {
+                        selectConversation(currentConversationId);
+                    }
+                } else if (conversations.length > 0) {
+                    selectConversation(conversations[0].id);
+                }
+            } catch (error) {
+                console.error('Eroare la încărcarea conversațiilor:', error);
+                const list = document.getElementById('conversations-list');
+                if (list) {
+                    list.innerHTML = `
+                        <div style="padding: 20px; text-align: center; color: var(--danger-color);">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 24px; margin-bottom: 10px;"></i>
+                            <p>Nu am putut încărca conversațiile.</p>
+                            <button class="btn btn-outline" onclick="loadConversations()">
+                                Reîncearcă
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        }
+
+        function renderConversations() {
+            const list = document.getElementById('conversations-list');
+            if (!list) return;
+
+            if (!conversations.length) {
+                list.innerHTML = `
+                    <div style="padding: 20px; text-align: center; color: var(--text-light);">
+                        <i class="fas fa-inbox" style="font-size: 32px; opacity: 0.3;"></i>
+                        <p style="margin-top: 10px;">Nu ai încă nicio conversație.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = conversations.map(conv => {
+                const lastMessage = conv.ultimul_mesaj ? conv.ultimul_mesaj : 'Nu există mesaje încă.';
+                const time = conv.ultimul_mesaj_data ? formatRelative(conv.ultimul_mesaj_data) : '';
+                const isActive = conv.id === currentConversationId;
+                const initials = conversationInitials(conv.partener?.nume || 'Utilizator');
+
+                return `
+                    <div class="conversation-item ${isActive ? 'active' : ''}" onclick="selectConversation(${conv.id})">
+                        <div style="display: flex; gap: 10px;">
+                            <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                                ${initials}
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 5px; gap: 10px;">
+                                    <strong>${conv.partener?.nume || 'Utilizator'}</strong>
+                                    <span style="font-size: 12px; color: var(--text-light); white-space: nowrap;">${time}</span>
+                                </div>
+                                <div style="font-size: 14px; color: var(--text-light); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    ${lastMessage ? lastMessage : 'Niciun mesaj'}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function selectConversation(conversationId) {
+            currentConversationId = conversationId;
+            renderConversations();
+
+            const convo = conversations.find(c => c.id === conversationId);
+            const header = document.getElementById('chat-header');
+            const messagesContainer = document.getElementById('chat-messages');
+            const input = document.getElementById('message-input');
+            const sendBtn = document.getElementById('send-message-btn');
+
+            if (!convo) {
+                if (header) header.innerHTML = '<div style="text-align: center; color: var(--text-light);">Conversație inexistentă.</div>';
+                if (messagesContainer) messagesContainer.innerHTML = '';
+                if (input) input.disabled = true;
+                if (sendBtn) sendBtn.disabled = true;
+                return;
+            }
+
+            if (header) {
+                const partnerName = convo.partener?.nume || 'Utilizator';
+                header.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="width: 50px; height: 50px; border-radius: 50%; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+                            ${conversationInitials(partnerName)}
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 5px;">${partnerName}</h3>
+                            <div style="font-size: 14px; color: var(--text-light);">
+                                ${convo.subiect ? `Subiect: ${convo.subiect}` : 'Conversație privată'}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (input) input.disabled = false;
+            if (sendBtn) sendBtn.disabled = false;
+
+            await markConversationRead(conversationId);
+            await loadMessages(conversationId);
+
+            startPolling();
+        }
+
+        async function loadMessages(conversationId) {
+            const messagesContainer = document.getElementById('chat-messages');
+            if (!messagesContainer) return;
+
+            messagesContainer.innerHTML = `
+                <div style="text-align: center; color: var(--text-light); padding: 20px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 10px;"></i>
+                    <p>Se încarcă mesajele...</p>
+                </div>
+            `;
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}mesaje.php?action=mesaje&id=${conversationId}`, {
+                    credentials: 'include'
+                });
+                const result = await response.json();
+                const mesaje = result.mesaje || [];
+
+                if (!mesaje.length) {
+                    messagesContainer.innerHTML = `
+                        <div style="text-align: center; color: var(--text-light); padding: 40px;">
+                            <i class="fas fa-comment-dots" style="font-size: 32px; opacity: 0.3;"></i>
+                            <p style="margin-top: 10px;">Începe conversația!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                messagesContainer.innerHTML = mesaje.map(msg => {
+                    const isSent = msg.id_expeditor === loggedInUser.id;
+                    const time = msg.created_at ? new Date(msg.created_at).toLocaleTimeString('ro-RO', { hour: '2-digit', minute: '2-digit' }) : '';
+                    const mesajText = msg.mesaj ? msg.mesaj.replace(/\n/g, '<br>') : '';
+                    return `
+                        <div class="message">
+                            <div class="message-bubble" style="background: ${isSent ? 'var(--primary-color)' : 'var(--light-bg)'}; color: ${isSent ? 'white' : 'inherit'};">
+                                <div class="message-text">${mesajText}</div>
+                                <div class="message-time">${time}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            } catch (error) {
+                console.error('Eroare la încărcarea mesajelor:', error);
+                messagesContainer.innerHTML = `
+                    <div style="text-align: center; color: var(--danger-color); padding: 20px;">
+                        <i class="fas fa-exclamation-circle" style="font-size: 24px; margin-bottom: 10px;"></i>
+                        <p>Nu am putut încărca mesajele. <button class="btn btn-outline" onclick="loadMessages(${conversationId})">Reîncearcă</button></p>
+                    </div>
+                `;
+            }
+        }
+
+        async function sendMessage() {
+            const input = document.getElementById('message-input');
+            if (!input || input.disabled) return;
+
+            const text = input.value.trim();
+            if (!text) return;
+
+            const payload = {
+                mesaj: text
+            };
+
+            if (currentConversationId) {
+                payload.id_conversatie = currentConversationId;
+            } else if (pendingPartnerId) {
+                payload.id_destinatar = pendingPartnerId;
+                if (pendingAdId) payload.id_anunt = pendingAdId;
+                if (pendingSubject) payload.subiect = pendingSubject;
+            } else {
+                Utils.showNotification('Selectează o conversație înainte de a trimite un mesaj.', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_CONFIG.BASE_URL}mesaje.php`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+                input.value = '';
+                pendingPartnerId = null;
+                pendingAdId = null;
+                pendingSubject = null;
+
+                await loadConversations(result.conversatie_id);
+                Utils.showNotification('Mesaj trimis!', 'success');
+            } catch (error) {
+                console.error('Eroare la trimiterea mesajului:', error);
+                Utils.showNotification('Nu am putut trimite mesajul.', 'error');
+            }
+        }
+
+        async function markConversationRead(conversationId) {
+            try {
+                await fetch(`${API_CONFIG.BASE_URL}mesaje.php`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ id_conversatie: conversationId })
+                });
+            } catch (error) {
+                // nu întrerupem fluxul pentru eroare de read
+                console.warn('Eroare la marcarea conversației ca citită:', error);
+            }
+        }
+
+        function startPolling() {
+            // Nu mai facem polling automat pentru mesaje
+            // Mesajele se vor actualiza doar când utilizatorul trimite un mesaj nou
+            // sau când reîncarcă pagina manual
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        async function initMessaging() {
+            try {
+                const auth = await Auth.check();
+                if (!auth.autentificat) {
+                    Utils.showNotification('Trebuie să fii autentificat pentru a accesa mesajele.', 'warning');
+                    setTimeout(() => {
+                        window.location.href = 'login.html?return=mesaje.html';
+                    }, 1500);
+                    return;
+                }
+                loggedInUser = auth.user;
+
+                const params = new URLSearchParams(window.location.search);
+                if (params.has('seller')) {
+                    pendingPartnerId = parseInt(params.get('seller'), 10);
+                }
+                if (params.has('ad')) {
+                    pendingAdId = parseInt(params.get('ad'), 10);
+                }
+                if (params.has('subject')) {
+                    pendingSubject = params.get('subject');
+                }
+                if (params.has('conversation')) {
+                    currentConversationId = parseInt(params.get('conversation'), 10);
+                }
+
+                await loadConversations(currentConversationId || null);
+
+                const input = document.getElementById('message-input');
+                const sendBtn = document.getElementById('send-message-btn');
+                if (input) {
+                    input.addEventListener('keydown', function (event) {
+                        if (event.key === 'Enter' && !event.shiftKey) {
+                            event.preventDefault();
+                            sendMessage();
+                        }
+                    });
+                }
+                if (sendBtn) {
+                    sendBtn.addEventListener('click', sendMessage);
+                }
+
+                if (!currentConversationId && pendingPartnerId) {
+                    const header = document.getElementById('chat-header');
+                    const messagesContainer = document.getElementById('chat-messages');
+                    if (header) {
+                        header.innerHTML = `
+                            <div style="text-align: center; color: var(--text-light);">
+                                Scrie un mesaj pentru a începe conversația cu acest utilizator.
+                            </div>
+                        `;
+                    }
+                    if (messagesContainer) {
+                        messagesContainer.innerHTML = `
+                            <div style="text-align: center; color: var(--text-light); padding: 40px;">
+                                <i class="fas fa-comment-dots" style="font-size: 32px; opacity: 0.3;"></i>
+                                <p>Trimite primul mesaj pentru a iniția conversația.</p>
+                            </div>
+                        `;
+                    }
+                    const input = document.getElementById('message-input');
+                    const sendBtn = document.getElementById('send-message-btn');
+                    if (input) input.disabled = false;
+                    if (sendBtn) sendBtn.disabled = false;
+                }
+            } catch (error) {
+                console.error('Eroare la inițializarea mesajelor:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initMessaging);
+        window.selectConversation = selectConversation;
+        window.sendMessage = sendMessage;
+    </script>
 </body>
 </html>
 
