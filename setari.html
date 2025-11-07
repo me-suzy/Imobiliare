@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Setări - Anunțuri & Oferte</title>
+    <title>Setări - Marc.ro</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -13,20 +13,28 @@
             <nav class="navbar">
                 <div class="logo" onclick="window.location.href='index.html'">
                     <i class="fas fa-circle-notch"></i>
-                    <span>Anunțuri & Oferte</span>
+                    <span>Marc.ro</span>
                 </div>
                 <ul class="nav-menu">
                     <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
                     <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
                     <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
                     <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li><a href="chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+                    <li><a href="notificari.html" class="notificari-link">
+                        <i class="fas fa-bell"></i> Notificări
+                        <span class="notificari-badge" id="notificari-badge" style="display: none;">0</span>
+                    </a></li>
                     <li class="dropdown">
                         <a href="#" class="user-menu active"><i class="fas fa-user-circle"></i></a>
                         <div class="dropdown-content">
                             <a href="contul-meu.html">Contul Meu</a>
                             <a href="anunturi-mele.html">Anunțurile Mele</a>
                             <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
                             <a href="setari.html">Setări</a>
+                            <a href="#" id="admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</a>
                             <a href="#" onclick="logout()">Deconectare</a>
                         </div>
                     </li>
@@ -48,27 +56,18 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Nume complet</label>
-                        <input type="text" class="form-control" value="Ionel Bălăuță">
+                        <input type="text" id="nume-complet" class="form-control" placeholder="Încărcare...">
                     </div>
                     <div class="form-group">
                         <label>Email</label>
-                        <input type="email" class="form-control" value="ionel.balauta@email.com">
+                        <input type="email" id="email-user" class="form-control" placeholder="Încărcare...">
                     </div>
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Telefon</label>
-                        <input type="tel" class="form-control" value="0722 123 456">
-                    </div>
-                    <div class="form-group">
-                        <label>Județ</label>
-                        <select class="form-control">
-                            <option value="iasi">Iași</option>
-                            <option value="bucuresti">București</option>
-                        </select>
-                    </div>
+                <div class="form-group" style="max-width: 320px;">
+                    <label>Telefon</label>
+                    <input type="tel" id="telefon-user" class="form-control" placeholder="Încărcare...">
                 </div>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" onclick="salveazaDatePersonale()">
                     <i class="fas fa-save"></i> Salvează modificările
                 </button>
             </div>
@@ -78,19 +77,19 @@
                 <h3 class="form-section-title">Schimbă parola</h3>
                 <div class="form-group">
                     <label>Parola curentă</label>
-                    <input type="password" class="form-control">
+                    <input type="password" id="parola-curenta" class="form-control" placeholder="Introdu parola curentă">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label>Parola nouă</label>
-                        <input type="password" class="form-control">
+                        <input type="password" id="parola-noua" class="form-control" placeholder="Minimum 6 caractere" minlength="6">
                     </div>
                     <div class="form-group">
                         <label>Confirmă parola nouă</label>
-                        <input type="password" class="form-control">
+                        <input type="password" id="parola-confirm" class="form-control" placeholder="Confirmă parola nouă" minlength="6">
                     </div>
                 </div>
-                <button class="btn btn-primary">
+                <button class="btn btn-primary" onclick="schimbaParola()">
                     <i class="fas fa-key"></i> Schimbă parola
                 </button>
             </div>
@@ -158,7 +157,7 @@
                     <a href="despre.html">Despre noi</a>
                 </div>
                 <div class="footer-copyright">
-                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
                 </div>
                 <div class="footer-social">
                     <a href="#"><i class="fab fa-facebook"></i></a>
@@ -170,13 +169,148 @@
         </div>
     </footer>
 
+    <script src="js/config.js"></script>
     <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadUserData();
+        });
+
+        async function loadUserData() {
+            try {
+                const result = await Auth.check();
+                if (!result.autentificat || !result.user) {
+                    Utils.showNotification('Trebuie să fii autentificat pentru a accesa setările.', 'warning');
+                    setTimeout(() => {
+                        window.location.href = 'login.html?return=setari.html';
+                    }, 1000);
+                    return;
+                }
+
+                const user = result.user;
+                populateUserFields(user);
+            } catch (error) {
+                console.error('Eroare la încărcarea datelor utilizatorului:', error);
+                Utils.showNotification('Nu am putut încărca datele contului. Încearcă din nou.', 'error');
+            }
+        }
+
+        function populateUserFields(user) {
+            const numeField = document.getElementById('nume-complet');
+            const emailField = document.getElementById('email-user');
+            const telefonField = document.getElementById('telefon-user');
+
+            if (numeField) numeField.value = user.nume || '';
+            if (emailField) emailField.value = user.email || '';
+            if (telefonField) telefonField.value = user.telefon || '';
+        }
+
+        // Salvează datele personale
+        async function salveazaDatePersonale() {
+            const nume = document.getElementById('nume-complet').value.trim();
+            const email = document.getElementById('email-user').value.trim();
+            const telefon = document.getElementById('telefon-user').value.trim();
+
+            // Validare
+            if (!nume) {
+                Utils.showNotification('Numele este obligatoriu', 'error');
+                return;
+            }
+
+            if (!email || !email.includes('@')) {
+                Utils.showNotification('Email invalid', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('api/auth.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        action: 'update_profile',
+                        nume: nume,
+                        email: email,
+                        telefon: telefon
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    Utils.showNotification('Datele au fost actualizate cu succes!', 'success');
+                    await loadUserData();
+                } else {
+                    Utils.showNotification(result.mesaj || 'Eroare la actualizarea datelor', 'error');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la salvarea datelor', 'error');
+            }
+        }
+
+        // Schimbă parola
+        async function schimbaParola() {
+            const parolaCurenta = document.getElementById('parola-curenta').value;
+            const parolaNoua = document.getElementById('parola-noua').value;
+            const parolaConfirm = document.getElementById('parola-confirm').value;
+
+            // Validare
+            if (!parolaCurenta) {
+                Utils.showNotification('Parola curentă este obligatorie', 'error');
+                return;
+            }
+
+            if (!parolaNoua || parolaNoua.length < 6) {
+                Utils.showNotification('Parola nouă trebuie să aibă minimum 6 caractere', 'error');
+                return;
+            }
+
+            if (parolaNoua !== parolaConfirm) {
+                Utils.showNotification('Parolele nu coincid', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('api/auth.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        action: 'change_password',
+                        parola_curenta: parolaCurenta,
+                        parola_noua: parolaNoua
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    Utils.showNotification('Parola a fost schimbată cu succes!', 'success');
+                    // Resetează câmpurile
+                    document.getElementById('parola-curenta').value = '';
+                    document.getElementById('parola-noua').value = '';
+                    document.getElementById('parola-confirm').value = '';
+                } else {
+                    Utils.showNotification(result.mesaj || 'Eroare la schimbarea parolei', 'error');
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                Utils.showNotification('Eroare la schimbarea parolei', 'error');
+            }
+        }
+
         function deleteAccount() {
             if (confirm('Ești absolut sigur că vrei să ștergi contul? Această acțiune este ireversibilă!')) {
                 if (confirm('Confirmă din nou că vrei să ștergi contul permanent.')) {
-                    alert('Contul tău a fost șters. Îți mulțumim că ai fost cu noi!');
-                    window.location.href = 'index.html';
+                    // TODO: Implementează ștergerea contului prin API
+                    alert('Funcționalitatea de ștergere cont va fi implementată în curând.');
+                    // window.location.href = 'index.html';
                 }
             }
         }
