@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestionare Parole - Admin Panel</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .admin-parole-page {
+            padding: 40px 20px;
+            background-color: var(--light-bg);
+            min-height: 80vh;
+        }
+
+        .admin-parole-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--primary-color), #FF6B35);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 10px 0;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .warning-box h3 {
+            color: #856404;
+            margin-top: 0;
+        }
+
+        .parole-table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        .parola-cell {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .btn-edit {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-edit:hover {
+            background: #0056b3;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Marc.ro</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="admin.html"><i class="fas fa-tachometer-alt"></i> Admin Panel</a></li>
+                    <li><a href="admin-parole.html" class="active"><i class="fas fa-key"></i> Parole</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Admin Parole Page -->
+    <section class="admin-parole-page">
+        <div class="admin-parole-container">
+            <div class="page-header">
+                <h1><i class="fas fa-key"></i> Gestionare Parole Utilizatori</h1>
+                <p>Vizualizează și gestionează parolele utilizatorilor</p>
+            </div>
+
+            <div class="warning-box">
+                <h3><i class="fas fa-exclamation-triangle"></i> ATENȚIE - Securitate</h3>
+                <p>Acest panou permite admin-ului să vadă parolele utilizatorilor. Parolele sunt stocate criptate (nu hash-uite) pentru a permite vizualizarea. <strong>NU activa această funcționalitate în producție!</strong></p>
+            </div>
+
+            <div class="parole-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nume</th>
+                            <th>Email</th>
+                            <th>Tip Cont</th>
+                            <th>Parolă</th>
+                            <th>Acțiuni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="parole-container">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
+                                <p>Se încarcă parolele...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal pentru editare parolă -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editare Parolă</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="editPasswordForm" onsubmit="updatePassword(event)">
+                <input type="hidden" id="edit-user-id">
+                <div class="form-group">
+                    <label>Email:</label>
+                    <input type="text" id="edit-user-email" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Parolă curentă:</label>
+                    <input type="text" id="edit-current-password" readonly 
+                           style="background-color: #f5f5f5; color: #666;">
+                    <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> Parola curentă a utilizatorului
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label>Parolă nouă:</label>
+                    <input type="text" id="edit-new-password" required minlength="6" 
+                           placeholder="Introdu parola nouă (vizibilă pentru admin)">
+                    <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                        <i class="fas fa-info-circle"></i> Parola este vizibilă deoarece ești administrator
+                    </small>
+                </div>
+                <button type="submit" class="btn-primary">Actualizează Parola</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/header-auth.js"></script>
+    <script>
+        // Verifică autentificare admin
+        async function checkAdminAuth() {
+            try {
+                const authCheck = await Auth.check();
+                if (!authCheck || !authCheck.autentificat || !authCheck.user || authCheck.user.tip_cont !== 'admin') {
+                    alert('Trebuie să fii autentificat ca admin pentru a accesa această pagină!');
+                    window.location.href = 'login.html?return=' + encodeURIComponent(window.location.href);
+                    return false;
+                }
+                return true;
+            } catch (error) {
+                console.error('Eroare la verificare autentificare:', error);
+                alert('Eroare la verificare autentificare!');
+                window.location.href = 'login.html?return=' + encodeURIComponent(window.location.href);
+                return false;
+            }
+        }
+
+        // Încarcă parolele
+        async function loadParole() {
+            try {
+                // Verifică autentificare mai întâi
+                const isAdmin = await checkAdminAuth();
+                if (!isAdmin) return;
+                
+                console.log('Încărcare parole...');
+                
+                const result = await API.get('admin-parole.php');
+                console.log('Rezultat API:', result);
+                
+                const users = result.utilizatori || [];
+                console.log('Utilizatori găsiți:', users.length);
+                
+                const container = document.getElementById('parole-container');
+                
+                if (users.length === 0) {
+                    container.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px;">
+                                <i class="fas fa-info-circle" style="font-size: 48px; color: #999; margin-bottom: 15px;"></i>
+                                <p style="font-size: 18px; color: #666;">Nu sunt utilizatori în baza de date.</p>
+                                <p style="margin-top: 10px;">
+                                    <a href="sincronizeaza-parole.php" style="color: var(--primary-color); text-decoration: underline;">Sincronizează parole existente →</a>
+                                </p>
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = users.map(user => `
+                    <tr>
+                        <td>${user.id || '-'}</td>
+                        <td>${(user.nume || 'N/A').replace(/'/g, "\\'")}</td>
+                        <td>${(user.email || 'N/A').replace(/'/g, "\\'")}</td>
+                        <td><span style="padding: 4px 8px; background: ${(user.tip_cont || 'user') === 'admin' ? '#ff9800' : '#4CAF50'}; color: white; border-radius: 4px; text-transform: capitalize;">${user.tip_cont || 'user'}</span></td>
+                        <td class="parola-cell">${(user.parola || 'Nu setată').replace(/'/g, "\\'")}</td>
+                        <td>
+                            <button class="btn-edit" onclick="openEditModal(${user.id}, '${(user.email || '').replace(/'/g, "\\'")}', '${(user.parola || '').replace(/'/g, "\\'")}')">
+                                <i class="fas fa-edit"></i> Editează
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (error) {
+                console.error('Eroare la încărcarea parolelor:', error);
+                const errorMsg = error.message || 'Eroare necunoscută';
+                document.getElementById('parole-container').innerHTML = `
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 40px; color: red;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                            <p style="font-size: 18px;">Eroare la încărcarea parolelor</p>
+                            <p style="margin-top: 10px; font-size: 14px; color: #666;">${errorMsg}</p>
+                            <p style="margin-top: 10px;">
+                                <a href="sincronizeaza-parole.php" style="color: var(--primary-color); text-decoration: underline;">Sincronizează parole existente →</a>
+                            </p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Deschide modal pentru editare
+        function openEditModal(userId, email, currentPassword) {
+            document.getElementById('edit-user-id').value = userId;
+            document.getElementById('edit-user-email').value = email;
+            document.getElementById('edit-current-password').value = currentPassword || 'Nu setată';
+            document.getElementById('edit-new-password').value = '';
+            document.getElementById('editModal').style.display = 'block';
+            
+            // Focus pe câmpul de parolă nouă
+            setTimeout(() => {
+                document.getElementById('edit-new-password').focus();
+            }, 100);
+        }
+
+        // Închide modal
+        function closeModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        // Actualizează parola
+        async function updatePassword(event) {
+            event.preventDefault();
+            
+            const userId = document.getElementById('edit-user-id').value;
+            const newPassword = document.getElementById('edit-new-password').value;
+            
+            try {
+                const result = await API.post('admin-parole.php', {
+                    id_utilizator: userId,
+                    parola: newPassword
+                });
+                
+                Utils.showNotification('Parola actualizată cu succes!', 'success');
+                closeModal();
+                loadParole();
+            } catch (error) {
+                Utils.showNotification('Eroare la actualizarea parolei', 'error');
+            }
+        }
+
+        // Închide modal când se dă click în afara lui
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Inițializare
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Verifică autentificare
+            const isAdmin = await checkAdminAuth();
+            if (isAdmin) {
+                loadParole();
+            }
+        });
+    </script>
+</body>
+</html>
+
