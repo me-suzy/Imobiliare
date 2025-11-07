@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anunțuri & Oferte - Vinde, Cumpără, Găsește!</title>
+    <title>Marc.ro - Vinde, Cumpără, Găsește!</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -14,20 +14,28 @@
             <nav class="navbar">
                 <div class="logo">
                     <i class="fas fa-circle-notch"></i>
-                    <span>Anunțuri & Oferte</span>
+                    <span>Marc.ro</span>
                 </div>
                 <ul class="nav-menu">
                     <li><a href="index.html" class="active"><i class="fas fa-home"></i> Acasă</a></li>
                     <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
                     <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
                     <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li><a href="chat.html" id="chat-link"><i class="fas fa-comments"></i> Chat</a></li>
+                    <li><a href="notificari.html" id="notificari-link" class="notificari-link">
+                        <i class="fas fa-bell"></i> Notificări
+                        <span class="notificari-badge" id="notificari-badge" style="display: none;">0</span>
+                    </a></li>
                     <li class="dropdown">
                         <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
                         <div class="dropdown-content">
                             <a href="contul-meu.html">Contul Meu</a>
                             <a href="anunturi-mele.html">Anunțurile Mele</a>
                             <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
                             <a href="setari.html">Setări</a>
+                            <a href="#" id="admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</a>
                             <a href="#" onclick="logout()">Deconectare</a>
                         </div>
                     </li>
@@ -43,7 +51,7 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1 class="hero-title">Anunțuri & Oferte</h1>
+                <h1 class="hero-title">Marc.ro</h1>
                 <p class="hero-subtitle">Vinde, Cumpără, Găsește!</p>
                 <button class="btn btn-primary btn-large" onclick="window.location.href='publica-anunt.html'">
                     Publică anunț
@@ -74,20 +82,20 @@
         <div class="container">
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-number">12.300</div>
+                    <div class="stat-number" id="stat-anunturi">0</div>
                     <div class="stat-label">Anunțuri</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">7.850</div>
+                    <div class="stat-number" id="stat-utilizatori">0</div>
                     <div class="stat-label">Utilizatori</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">1.450</div>
+                    <div class="stat-number" id="stat-noi-azi">0</div>
                     <div class="stat-label">Anunțuri noi azi</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-number">500</div>
-                    <div class="stat-label">Oferte verificate</div>
+                    <div class="stat-number" id="stat-noi-saptamana">0</div>
+                    <div class="stat-label">Anunțuri noi săptămâna aceasta</div>
                 </div>
             </div>
         </div>
@@ -154,90 +162,11 @@
     <section class="recent-ads">
         <div class="container">
             <h2 class="section-title">Anunțuri recente</h2>
-            <div class="ads-grid">
-                <!-- Ad Card 1 -->
-                <div class="ad-card">
-                    <div class="ad-image">
-                        <img src="https://via.placeholder.com/300x200?text=Apartament+2+camere" alt="Apartament 2 camere">
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="ad-content">
-                        <div class="ad-price">85.000 €</div>
-                        <h3 class="ad-title">Apartament 2 camere, zonă centrală</h3>
-                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> București, Sector 1</div>
-                        <div class="ad-date">Publicat azi</div>
-                    </div>
-                </div>
-
-                <!-- Ad Card 2 -->
-                <div class="ad-card">
-                    <div class="ad-image">
-                        <img src="https://via.placeholder.com/300x200?text=Volkswagen+Golf" alt="Volkswagen Golf">
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
-                        <span class="ad-badge">Urgent</span>
-                    </div>
-                    <div class="ad-content">
-                        <div class="ad-price">12.500 €</div>
-                        <h3 class="ad-title">Volkswagen Golf 7, 2016, Full Options</h3>
-                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Cluj-Napoca</div>
-                        <div class="ad-date">Publicat azi</div>
-                    </div>
-                </div>
-
-                <!-- Ad Card 3 -->
-                <div class="ad-card">
-                    <div class="ad-image">
-                        <img src="https://via.placeholder.com/300x200?text=iPhone+14+Pro" alt="iPhone 14 Pro">
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="ad-content">
-                        <div class="ad-price">950 €</div>
-                        <h3 class="ad-title">iPhone 14 Pro, 256GB, Sigilat</h3>
-                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Timișoara</div>
-                        <div class="ad-date">Acum 2 ore</div>
-                    </div>
-                </div>
-
-                <!-- Ad Card 4 -->
-                <div class="ad-card">
-                    <div class="ad-image">
-                        <img src="https://via.placeholder.com/300x200?text=Canapea+moderna" alt="Canapea">
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="ad-content">
-                        <div class="ad-price">1.200 lei</div>
-                        <h3 class="ad-title">Canapea modernă, 3 locuri, gri</h3>
-                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Iași</div>
-                        <div class="ad-date">Acum 5 ore</div>
-                    </div>
-                </div>
-
-                <!-- Ad Card 5 -->
-                <div class="ad-card">
-                    <div class="ad-image">
-                        <img src="https://via.placeholder.com/300x200?text=Labrador+Retriever" alt="Labrador">
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="ad-content">
-                        <div class="ad-price">800 lei</div>
-                        <h3 class="ad-title">Labrador Retriever, cățel, 3 luni</h3>
-                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> Brașov</div>
-                        <div class="ad-date">Ieri</div>
-                    </div>
-                </div>
-
-                <!-- Ad Card 6 -->
-                <div class="ad-card">
-                    <div class="ad-image">
-                        <img src="https://via.placeholder.com/300x200?text=Laptop+Gaming" alt="Laptop">
-                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
-                    </div>
-                    <div class="ad-content">
-                        <div class="ad-price">3.500 lei</div>
-                        <h3 class="ad-title">Laptop Gaming ASUS ROG, RTX 3060</h3>
-                        <div class="ad-location"><i class="fas fa-map-marker-alt"></i> București, Sector 3</div>
-                        <div class="ad-date">Ieri</div>
-                    </div>
+            <div class="ads-grid" id="recent-ads-container">
+                <!-- Anunțurile vor fi încărcate dinamic aici -->
+                <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 32px; margin-bottom: 10px;"></i>
+                    <p>Se încarcă anunțurile...</p>
                 </div>
             </div>
 
@@ -260,7 +189,7 @@
                     <a href="despre.html">Despre noi</a>
                 </div>
                 <div class="footer-copyright">
-                    <p>&copy; 2025 Anunțuri & Oferte. Toate drepturile rezervate.</p>
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
                 </div>
                 <div class="footer-social">
                     <a href="#"><i class="fab fa-facebook"></i></a>
@@ -272,7 +201,126 @@
         </div>
     </footer>
 
+    <script src="js/config.js"></script>
     <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
+    <script>
+        // Dropdown-ul este inițializat în script.js
+        // Header-ul este actualizat în js/header-auth.js
+        // Nu mai este nevoie de cod suplimentar aici
+    </script>
+    <script>
+        // Formatează numărul cu separator de mii
+        function formatNumber(num) {
+            return new Intl.NumberFormat('ro-RO').format(num);
+        }
+
+        // Încarcă statisticile
+        async function loadStats() {
+            try {
+                const response = await fetch(API_CONFIG.BASE_URL + 'stats.php');
+                const result = await response.json();
+                
+                if (response.ok) {
+                    document.getElementById('stat-anunturi').textContent = formatNumber(result.anunturi || 0);
+                    document.getElementById('stat-utilizatori').textContent = formatNumber(result.utilizatori || 0);
+                    document.getElementById('stat-noi-azi').textContent = formatNumber(result.anunturi_noi_azi || 0);
+                    document.getElementById('stat-noi-saptamana').textContent = formatNumber(result.anunturi_noi_saptamana || 0);
+                }
+            } catch (error) {
+                console.error('Eroare la încărcarea statisticilor:', error);
+            }
+        }
+
+        // Încarcă anunțurile recente
+        async function loadRecentAds() {
+            try {
+                const result = await Anunturi.getAll({ limit: 6 });
+                const ads = result.anunturi || [];
+                
+                const container = document.getElementById('recent-ads-container');
+                
+                if (ads.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 40px; color: var(--text-light);">
+                            <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+                            <p style="font-size: 18px;">Nu sunt anunțuri disponibile momentan.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                container.innerHTML = ads.map(ad => {
+                    const imgUrl = ad.imagini && ad.imagini.length > 0 
+                        ? ad.imagini[0] 
+                        : 'https://via.placeholder.com/300x200?text=Anunț';
+                    
+                    return `
+                        <div class="ad-card" onclick="window.location.href='anunt-detalii.html?id=${ad.id}'" style="cursor: pointer;">
+                            <div class="ad-image">
+                                <img src="${imgUrl}" alt="${ad.titlu}">
+                                <button class="favorite-btn" onclick="event.stopPropagation(); toggleFavorite(this)"><i class="far fa-heart"></i></button>
+                            </div>
+                            <div class="ad-content">
+                                <div class="ad-price">${Utils.formatPrice(parseFloat(ad.pret || 0), ad.moneda || 'RON')}</div>
+                                <h3 class="ad-title">${ad.titlu}</h3>
+                                <div class="ad-location"><i class="fas fa-map-marker-alt"></i> ${ad.oras || 'N/A'}${ad.judet ? ', ' + ad.judet : ''}</div>
+                                <div class="ad-date">${Utils.formatRelativeDate(ad.data_creare)}</div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Eroare la încărcarea anunțurilor:', error);
+                document.getElementById('recent-ads-container').innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--danger-color);">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                        <p style="font-size: 18px;">Eroare la încărcarea anunțurilor.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Încarcă numărul de notificări
+        async function loadNotificationsCount() {
+            try {
+                const authCheck = await Auth.check();
+                if (authCheck && authCheck.autentificat) {
+                    const result = await API.get('notificari.php');
+                    const badge = document.getElementById('notificari-badge');
+                    if (badge && result.necitite > 0) {
+                        badge.textContent = result.necitite;
+                        badge.style.display = 'inline-block';
+                    } else if (badge) {
+                        badge.style.display = 'none';
+                    }
+                } else {
+                    // Ascunde badge-ul dacă nu e autentificat
+                    const badge = document.getElementById('notificari-badge');
+                    if (badge) badge.style.display = 'none';
+                }
+            } catch (error) {
+                // Ignoră erorile pentru utilizatorii neautentificați
+                const badge = document.getElementById('notificari-badge');
+                if (badge) badge.style.display = 'none';
+            }
+        }
+
+        // Inițializare când se încarcă pagina
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header-ul este actualizat automat de js/header-auth.js
+            // Nu mai apelăm updateHeaderAuth() aici pentru a evita duplicate
+            
+            loadStats();
+            loadRecentAds();
+            loadNotificationsCount();
+            
+            // Reîmprospătează statisticile la fiecare 30 de secunde
+            setInterval(loadStats, 30000);
+            // Reîmprospătează notificările la fiecare 60 de secunde
+            setInterval(loadNotificationsCount, 60000);
+        });
+    </script>
 </body>
 </html>
 
