@@ -1,10 +1,48 @@
-// Global variables
-let currentUser = {
-    name: "Ionel Bălăuță",
-    email: "ionel.balauta@email.com",
-    phone: "0722 123 456",
-    isLoggedIn: true
-};
+// Funcție GLOBALĂ pentru inițializarea dropdown-ului (trebuie să fie disponibilă oricând)
+function initDropdown() {
+    const dropdown = document.querySelector('.dropdown');
+    const userMenuBtn = document.querySelector('.user-menu');
+    
+    if (!userMenuBtn || !dropdown) {
+        // Dacă nu există elementele, nu face nimic
+        return;
+    }
+    
+    // Șterge event listeners existente - clonează butonul
+    const newBtn = userMenuBtn.cloneNode(true);
+    userMenuBtn.parentNode.replaceChild(newBtn, userMenuBtn);
+    
+    // Adaugă event listener nou pentru click
+    newBtn.addEventListener('click', function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        
+        const dropdown = document.querySelector('.dropdown');
+        if (dropdown) {
+            const wasActive = dropdown.classList.contains('active');
+            
+            // Șterge active de la toate celelalte dropdown-uri
+            document.querySelectorAll('.dropdown.active').forEach(d => {
+                d.classList.remove('active');
+            });
+            
+            // Toggle dropdown-ul curent
+            if (wasActive) {
+                dropdown.classList.remove('active');
+            } else {
+                dropdown.classList.add('active');
+            }
+            
+            console.log('Dropdown:', wasActive ? 'CLOSED' : 'OPENED');
+        }
+        
+        // Oprește propagarea pentru a preveni închiderea imediată
+        return false;
+    });
+}
+
+// Face funcția disponibilă global
+window.initDropdown = initDropdown;
 
 // Mobile menu toggle
 document.addEventListener('DOMContentLoaded', function() {
@@ -17,8 +55,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Close mobile menu when clicking outside
+    // Inițializează dropdown-ul imediat
+    initDropdown();
+    
+    // Reinițializează după un mic delay pentru a fi sigur că funcționează pe toate paginile
+    setTimeout(initDropdown, 300);
+    
+    // Reinițializează și după un delay mai mare (pentru pagini care se încarcă lent sau care modifică dropdown-ul dinamic)
+    setTimeout(initDropdown, 800);
+
+    // Close dropdown when clicking outside
+    // Folosește setTimeout pentru a permite toggle-ului să se execute primul
     document.addEventListener('click', function(event) {
+        setTimeout(function() {
+            const clickedElement = event.target;
+            const dropdown = clickedElement.closest('.dropdown');
+            const isUserMenu = clickedElement.closest('.user-menu');
+            const isDropdownContent = clickedElement.closest('.dropdown-content');
+            
+            // Dacă click-ul NU e pe butonul user-menu și NU e în dropdown-content
+            if (!isUserMenu && !isDropdownContent) {
+                // Închide toate dropdown-urile active
+                document.querySelectorAll('.dropdown.active').forEach(d => {
+                    d.classList.remove('active');
+                });
+            }
+        }, 10); // Mic delay pentru a permite toggle-ului să se execute
+        
+        // Close mobile menu
         if (!event.target.closest('.navbar')) {
             if (navMenu) navMenu.classList.remove('active');
         }
@@ -78,16 +142,40 @@ function searchAds() {
 }
 
 // User logout
-function logout() {
+// Funcție logout reală prin API
+async function logout() {
     if (confirm('Sigur vrei să te deconectezi?')) {
-        currentUser.isLoggedIn = false;
-        localStorage.removeItem('user');
-        showNotification('Te-ai deconectat cu succes!', 'success');
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1000);
+        try {
+            await API.post('auth.php', { action: 'logout' });
+            Utils.showNotification('Te-ai deconectat cu succes!', 'success');
+            // Șterge datele din localStorage
+            localStorage.removeItem('user');
+            // Actualizează header-ul imediat
+            if (typeof updateHeaderAuth === 'function') {
+                await updateHeaderAuth();
+            }
+            // Redirect la index după 1 secundă
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        } catch (error) {
+            console.error('Eroare la logout:', error);
+            // Chiar dacă e eroare, șterge datele locale și redirect
+            localStorage.removeItem('user');
+            // Actualizează header-ul imediat
+            if (typeof updateHeaderAuth === 'function') {
+                await updateHeaderAuth();
+            }
+            Utils.showNotification('Te-ai deconectat!', 'info');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
     }
 }
+
+// Funcția updateHeaderAuth este în js/header-auth.js
+// Nu mai este necesară aici pentru a evita conflictele
 
 // Notification system
 function showNotification(message, type = 'info') {
@@ -304,16 +392,26 @@ function submitReport(adId) {
 }
 
 // Contact seller
-function contactSeller(sellerId, adId) {
-    if (!currentUser.isLoggedIn) {
-        showNotification('Trebuie să fii autentificat pentru a contacta vânzătorul', 'warning');
-        setTimeout(() => {
-            window.location.href = 'login.html';
-        }, 2000);
-        return;
+async function contactSeller(sellerId, adId) {
+    try {
+        const authStatus = await Auth.check();
+        if (!authStatus.autentificat) {
+            showNotification('Trebuie să fii autentificat pentru a contacta vânzătorul', 'warning');
+            setTimeout(() => {
+                window.location.href = `login.html?return=${encodeURIComponent(`mesaje.html?seller=${sellerId}&ad=${adId}`)}`;
+            }, 1500);
+            return;
+        }
+
+        let targetUrl = `mesaje.html?seller=${sellerId}`;
+        if (adId) {
+            targetUrl += `&ad=${adId}`;
+        }
+        window.location.href = targetUrl;
+    } catch (error) {
+        console.error('Eroare la verificarea autentificării:', error);
+        showNotification('Nu am putut verifica autentificarea. Încearcă din nou.', 'error');
     }
-    
-    window.location.href = `mesaje.html?seller=${sellerId}&ad=${adId}`;
 }
 
 // Filter and sort functionality
@@ -486,6 +584,20 @@ window.contactSeller = contactSeller;
 window.applyFilters = applyFilters;
 window.resetFilters = resetFilters;
 window.scrollToTop = scrollToTop;
+// Utils, Auth, API sunt deja definite în config.js
+// Nu mai declarăm duplicate pentru a evita erorile "has already been declared"
+
+// Error display function
+function showError(message) {
+    if (window.Utils && window.Utils.showNotification) {
+        window.Utils.showNotification(message, 'error');
+    } else {
+        alert('Eroare: ' + message);
+    }
+}
+
+// Export
+window.showError = showError;
 
 console.log('Script.js loaded successfully!');
 
