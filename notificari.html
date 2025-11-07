@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificări - Marc.ro</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .notificari-page {
+            padding: 40px 20px;
+            background-color: var(--light-bg);
+            min-height: 80vh;
+        }
+
+        .notificari-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .notificari-header h1 {
+            font-size: 32px;
+        }
+
+        .notificari-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .notificari-list {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .notificare-item {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            gap: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notificare-item:last-child {
+            border-bottom: none;
+        }
+
+        .notificare-item:hover {
+            background: var(--light-bg);
+        }
+
+        .notificare-item.necitita {
+            background: #e3f2fd;
+            border-left: 4px solid #2196F3;
+        }
+
+        .notificare-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .notificare-icon.info { background: #e3f2fd; color: #2196F3; }
+        .notificare-icon.success { background: #e8f5e9; color: #4CAF50; }
+        .notificare-icon.warning { background: #fff3e0; color: #FF9800; }
+        .notificare-icon.error { background: #ffebee; color: #F44336; }
+
+        .notificare-content {
+            flex: 1;
+        }
+
+        .notificare-titlu {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .notificare-mesaj {
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+
+        .notificare-data {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+
+        .notificare-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo" onclick="window.location.href='index.html'">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Marc.ro</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="index.html"><i class="fas fa-home"></i> Acasă</a></li>
+                    <li><a href="publica-anunt.html"><i class="fas fa-plus-circle"></i> Publică Anunț</a></li>
+                    <li><a href="cautare.html"><i class="fas fa-search"></i> Caută</a></li>
+                    <li><a href="favorite.html"><i class="fas fa-heart"></i> Favorite</a></li>
+                    <li><a href="chat.html"><i class="fas fa-comments"></i> Chat</a></li>
+                    <li><a href="notificari.html" class="active notificari-link">
+                        <i class="fas fa-bell"></i> Notificări
+                        <span class="notificari-badge" id="notificari-badge" style="display: none;">0</span>
+                    </a></li>
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i></a>
+                        <div class="dropdown-content">
+                            <a href="contul-meu.html">Contul Meu</a>
+                            <a href="anunturi-mele.html">Anunțurile Mele</a>
+                            <a href="mesaje.html">Mesaje</a>
+                            <a href="plati.html">Plăți</a>
+                            <a href="ratinguri.html">Ratinguri</a>
+                            <a href="setari.html">Setări</a>
+                            <a href="#" id="admin-link" style="display: none;" onclick="window.location.href='admin.html'">Admin Panel</a>
+                            <a href="#" onclick="logout()">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+                <div class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section class="notificari-page">
+        <div class="container">
+            <div class="notificari-header">
+                <h1><i class="fas fa-bell"></i> Notificări</h1>
+                <button class="btn btn-outline" onclick="markAllRead()">Marchează toate ca citite</button>
+            </div>
+
+            <div class="notificari-filters">
+                <button class="filter-btn active" onclick="filterNotifications('all')">Toate</button>
+                <button class="filter-btn" onclick="filterNotifications('unread')">Necitite</button>
+                <button class="filter-btn" onclick="filterNotifications('read')">Citite</button>
+            </div>
+
+            <div class="notificari-list" id="notificari-container">
+                <div style="text-align: center; padding: 40px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 32px;"></i>
+                    <p>Se încarcă notificările...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="contact.html">Contact</a>
+                    <a href="termeni.html">Termeni</a>
+                    <a href="ajutor.html">Ajutor</a>
+                    <a href="despre.html">Despre noi</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Marc.ro. Toate drepturile rezervate.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="script.js"></script>
+    <script src="js/header-auth.js"></script>
+    <script>
+        let currentFilter = 'all';
+        let allNotifications = [];
+
+        // Încarcă notificările
+        async function loadNotifications() {
+            try {
+                const result = await API.get('notificari.php');
+                allNotifications = result.notificari || [];
+                displayNotifications(allNotifications);
+                
+                // Actualizează badge-ul
+                if (result.necitite > 0) {
+                    document.getElementById('notificari-badge').textContent = result.necitite;
+                    document.getElementById('notificari-badge').style.display = 'inline-block';
+                } else {
+                    document.getElementById('notificari-badge').style.display = 'none';
+                }
+            } catch (error) {
+                console.error('Eroare:', error);
+                showError('Eroare la încărcarea notificărilor');
+            }
+        }
+
+        // Filtrează notificările
+        function filterNotifications(filter) {
+            currentFilter = filter;
+            
+            // Actualizează butoanele
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            let filtered = allNotifications;
+            if (filter === 'unread') {
+                filtered = allNotifications.filter(n => !n.citita);
+            } else if (filter === 'read') {
+                filtered = allNotifications.filter(n => n.citita);
+            }
+            
+            displayNotifications(filtered);
+        }
+
+        // Afișează notificările
+        function displayNotifications(notificari) {
+            const container = document.getElementById('notificari-container');
+            
+            if (notificari.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-bell-slash"></i>
+                        <h2>Nu ai notificări</h2>
+                        <p>Toate notificările tale vor apărea aici</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = notificari.map(notif => {
+                const iconClass = {
+                    'info': 'info',
+                    'success': 'success',
+                    'warning': 'warning',
+                    'error': 'error'
+                }[notif.tip] || 'info';
+                
+                const iconMap = {
+                    'info': 'fa-info-circle',
+                    'success': 'fa-check-circle',
+                    'warning': 'fa-exclamation-triangle',
+                    'error': 'fa-times-circle'
+                };
+                
+                return `
+                    <div class="notificare-item ${notif.citita ? '' : 'necitita'}" onclick="openNotification(${notif.id}, '${notif.link || ''}')">
+                        <div class="notificare-icon ${iconClass}">
+                            <i class="fas ${iconMap[notif.tip] || 'fa-bell'}"></i>
+                        </div>
+                        <div class="notificare-content">
+                            <div class="notificare-titlu">${notif.titlu}</div>
+                            <div class="notificare-mesaj">${notif.mesaj}</div>
+                            <div class="notificare-data">${Utils.formatRelativeDate(notif.data_creare)}</div>
+                        </div>
+                        <div class="notificare-actions">
+                            ${!notif.citita ? `<button class="btn btn-small btn-outline" onclick="event.stopPropagation(); markAsRead(${notif.id})">Marchează citită</button>` : ''}
+                            <button class="btn btn-small btn-outline" onclick="event.stopPropagation(); deleteNotification(${notif.id})" style="color: var(--danger-color);">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Marchează notificarea ca citită
+        async function markAsRead(id) {
+            try {
+                await API.put('notificari.php', { id });
+                await loadNotifications();
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+        }
+
+        // Marchează toate ca citite
+        async function markAllRead() {
+            if (!confirm('Ești sigur că vrei să marchezi toate notificările ca citite?')) {
+                return;
+            }
+            
+            try {
+                await API.put('notificari.php', { action: 'mark_all_read' });
+                await loadNotifications();
+                Utils.showNotification('Toate notificările au fost marcate ca citite', 'success');
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+        }
+
+        // Șterge notificare
+        async function deleteNotification(id) {
+            if (!confirm('Ești sigur că vrei să ștergi această notificare?')) {
+                return;
+            }
+            
+            try {
+                await API.delete('notificari.php', { id });
+                await loadNotifications();
+            } catch (error) {
+                console.error('Eroare:', error);
+            }
+        }
+
+        // Deschide notificare
+        function openNotification(id, link) {
+            markAsRead(id);
+            if (link) {
+                window.location.href = link;
+            }
+        }
+
+        // Inițializare
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Verifică autentificare - NU face redirect dacă e eroare de rețea
+            try {
+                const result = await Auth.check();
+                if (!result || !result.autentificat) {
+                    // Doar dacă e clar că nu e autentificat (nu e eroare)
+                    if (result && result.autentificat === false) {
+                        if (confirm('Pentru a accesa Notificările trebuie să fii autentificat. Vrei să te conectezi?')) {
+                            window.location.href = 'login.html?return=' + encodeURIComponent(window.location.href);
+                        }
+                        return;
+                    }
+                    // Dacă e eroare, lasă utilizatorul să rămână pe pagină
+                    console.log('Eroare la verificare autentificare, se va încerca din nou');
+                } else {
+                    loadNotifications();
+                    setInterval(loadNotifications, 60000); // Reîmprospătează la fiecare minut
+                }
+            } catch (error) {
+                console.error('Eroare la verificare autentificare:', error);
+                // Nu face redirect la erori - lasă utilizatorul pe pagină
+                // Totuși, încearcă să încarce notificările
+                try {
+                    await loadNotifications();
+                } catch (e) {
+                    console.error('Nu s-au putut încărca notificările:', e);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
