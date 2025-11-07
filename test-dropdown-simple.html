@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Dropdown Simple</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { padding: 50px; }
+        .test-info { background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test Dropdown - Simplificat</h1>
+    
+    <div class="test-info">
+        <p><strong>Instrucțiuni:</strong></p>
+        <ol>
+            <li>Deschide consola browser-ului (F12)</li>
+            <li>Click pe iconița "Cont" de sus</li>
+            <li>Verifică dacă apare dropdown-ul</li>
+            <li>Verifică consola pentru mesaje</li>
+        </ol>
+    </div>
+
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <i class="fas fa-circle-notch"></i>
+                    <span>Test</span>
+                </div>
+                <ul class="nav-menu">
+                    <li class="dropdown">
+                        <a href="#" class="user-menu"><i class="fas fa-user-circle"></i> Cont</a>
+                        <div class="dropdown-content">
+                            <a href="#">Contul Meu</a>
+                            <a href="#">Anunțurile Mele</a>
+                            <a href="#">Deconectare</a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <script src="js/config.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        console.log('=== TEST DROPDOWN ===');
+        console.log('1. Dropdown element:', document.querySelector('.dropdown'));
+        console.log('2. User menu button:', document.querySelector('.user-menu'));
+        console.log('3. Dropdown content:', document.querySelector('.dropdown-content'));
+        console.log('4. initDropdown function:', typeof initDropdown);
+        
+        // Test direct
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('5. DOM Loaded - Testing dropdown...');
+            
+            setTimeout(function() {
+                if (typeof initDropdown === 'function') {
+                    console.log('6. Calling initDropdown...');
+                    initDropdown();
+                    console.log('7. initDropdown called successfully');
+                } else {
+                    console.error('ERROR: initDropdown is not a function!');
+                }
+                
+                // Test click manual
+                const btn = document.querySelector('.user-menu');
+                if (btn) {
+                    console.log('8. User menu button found, adding test listener...');
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('9. CLICK DETECTED on user menu!');
+                        const dropdown = document.querySelector('.dropdown');
+                        if (dropdown) {
+                            dropdown.classList.toggle('active');
+                            console.log('10. Dropdown classList:', dropdown.classList.toString());
+                        }
+                    });
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>
+
